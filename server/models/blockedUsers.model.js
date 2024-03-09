@@ -6,5 +6,4 @@ const blockedUsersSchema = new mongoose.Schema({
     ref: "User"
   }],
 });
-const BlockedUsers = mongoose.model("BlockedUsers", blockedUsersSchema);
-export default BlockedUsers;
+export const BlockedUsers = mongoose.model("BlockedUsers", blockedUsersSchema);

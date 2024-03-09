@@ -4,8 +4,6 @@ const otpSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
-    trim: true,
   },
   otp: {
     type: String,
@@ -18,5 +16,4 @@ const otpSchema = new mongoose.Schema({
   }
 
 });
-const OTP = mongoose.model("OTP", otpSchema);
-export default OTP;
+export const OTP = mongoose.model("OTP", otpSchema);

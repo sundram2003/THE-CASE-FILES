@@ -28,5 +28,4 @@ const additionalDetailsSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-const additionalDetails = mongoose.model("AdditionalDetails", additionalDetailsSchema);
-export default additionalDetails;
+export const AdditionalDetails = mongoose.model("AdditionalDetails", additionalDetailsSchema);
