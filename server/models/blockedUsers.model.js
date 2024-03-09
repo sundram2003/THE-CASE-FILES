@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const blockedUsersSchema = new mongoose.Schema({
-  blockedUser: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+  email: [{
+    type: String,
+    required: true,
   }],
 });
 export const BlockedUsers = mongoose.model("BlockedUsers", blockedUsersSchema);

@@ -205,6 +205,8 @@ export const loginController = async (req, res) => {
     const payload = {
       userId: userDetails._id,
       role: userDetails.role,
+      username: userDetails.username,
+      email: userDetails.email,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1d",

@@ -4,7 +4,6 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minlength: 3,
     index: true
   },
   content: {
@@ -23,31 +22,31 @@ const blogSchema = new mongoose.Schema({
   },
   upvotes: [{
     type: mongoose.Schema.Types.ObjectId,
-    default: 0
+    default: []
   }],
   downvotes: [{
     type: mongoose.Schema.Types.ObjectId,
-    default: 0
+    default: []
   }],
   comments: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Comment"
   }],
   category: {
-    type: String,
-    enum: ["technology", "lifestyle", "food", "travel", "fashion", "fitness", "health"],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
     required: true
   },
   coverImg: {
     type: String,
   },
-  tags: {
-    type: [String],
-  },
+  tags: [{
+    type: String,
+  }],
   slug: {
     type: String,
     required: true,
-    unique: true
+    index: true,
   }
 }, { timestamps: true });
 
