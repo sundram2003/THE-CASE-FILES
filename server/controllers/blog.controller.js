@@ -11,7 +11,8 @@ export const createBlog = async (req, res) => {
     5. creat a slug
     
     6. create blog
-    7. return response
+    7. add this blog to user's blogs
+    8. return response
     */
 
     // 1.get users id from req.user
@@ -58,7 +59,10 @@ export const createBlog = async (req, res) => {
       coverImg: imgUrl,
       slug,
     });
-    // 7. return response
+    // 7. add this blog to user's blogs
+    const user = await User.findByIdAndUpdate(userId,
+      { $push: { blogs: blog._id } });
+    // 8. return response
     return res.status(201).json({
       success: true,
       message: "Blog created successfully",
