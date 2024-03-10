@@ -26,7 +26,7 @@ function Navbar() {
               Login
             </button>
           </Link>
-          <Link to="/signup">
+          <Link to="/register">
             <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
               Sign Up
             </button>

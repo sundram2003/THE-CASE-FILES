@@ -17,7 +17,7 @@ body {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  border: 9px solid #f1f2ff;
+  border: 9px solid rgb(173, 176, 179);
   animation: spinner-bulqg1 0.8s infinite linear alternate,
     spinner-oaa3wk 1.6s infinite linear;
 }
@@ -119,8 +119,8 @@ body {
 }
 
 .lable-style {
-  @apply text-[14px] text-white;
+  @apply text-[14px] border-slate-600 text-black;
 }
 .form-style {
-  @apply rounded-lg  p-3 text-[16px] leading-[24px] text-black shadow-[0_1px_0_0] shadow-white/50 placeholder:text-slate-400 focus:outline-none;
+  @apply rounded-lg border-slate-500  p-3 text-[16px] leading-[24px] text-black shadow-[0_1px_0_0] shadow-white/50 placeholder:text-slate-400 focus:outline-none;
 }
