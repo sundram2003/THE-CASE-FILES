@@ -2,29 +2,29 @@ import express from 'express';
 import {
   createBlog,
   deleteBlog,
-  getBlog,
-  getBlogById,
-  getBlogsByUpvotes,
   downvoteBlog,
   getAllBlogs,
-  getBlogsByUser,
+  getBlogById,
+  getBlogsByCategory,
+  getBlogsByUpvotes,
+  getMyBlogs,
   updateBlog,
-  upvoteBlog,
-  getBlogsByCategory
+  upvoteBlog
 } from '../controllers/blog.controller.js';
+import { auth } from '../middlewares/auth.js'
 const router = express.Router();
 
 
-router.post('/createblog', createBlog);
-router.get('/getblog', getBlog);
+router.post('/create', auth, createBlog);
+router.get("/getBlogs/:id", getBlogById);
 router.get('/getallblogs', getAllBlogs);
-router.put('/upvote/:id', upvoteBlog);
-router.put('/downvote/:id', downvoteBlog);
-router.get('/getblogsbyupvotes', getBlogsByUpvotes);
-router.get('/getblog/:id', getBlogById);
-router.put('/updateblog/:id', updateBlog);
-router.delete('/deleteblog/:id', deleteBlog);
-router.get('/getblogbycategory/:category', getBlogsByCategory);
-router.get('/getblogbyuser/:user', getBlogsByUser);
+router.get('/getmyBlogs', auth, getMyBlogs);
+router.get('/getBlogByCategory/:category', getBlogsByCategory);
+router.put('/upvote', auth, upvoteBlog);
+router.put('/downvote', auth, downvoteBlog);
+router.delete('/delete', auth, deleteBlog);
+router.put('/update', auth, updateBlog);
+router.get('/getBlogsByUpvote', getBlogsByUpvotes);
+
 
 export default router;

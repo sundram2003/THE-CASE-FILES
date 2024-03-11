@@ -1,6 +1,8 @@
 import { BlockedUsers } from '../models/blockedUsers.model.js';
 import { Blog } from '../models/blogs.model.js';
-
+import { uploadImageToCloudinary } from '../utils/imageUploader.js';
+import { Category } from '../models/category.model.js';
+import { User } from '../models/user.model.js';
 export const createBlog = async (req, res) => {
   try {
     /*
@@ -17,12 +19,22 @@ export const createBlog = async (req, res) => {
 
     // 1.get users id from req.user
     const userId = req.user.id;
+    console.log(userId)
     // 2. check user is blocked or not
     const isBlockedUser = await BlockedUsers.findOne({ email: req.user.email });
+    if (isBlockedUser) {
+      return res.status(400).json({
+        success: false,
+        message: "You are blocked by admin"
+      });
+    }
     // 3. get parameters from request body
-    const { title, content, status, category, tags } = req.body;
-    const { coverImg } = req.file;
-    // 4. validate parameters
+    let { title, content, status, category, tags } = req.body;
+    if (!status || status === undefined) {
+      status = "Draft";
+    }
+    const coverImg = req.files.coverImg;
+    // 4. validate parameterscoverImg
     if (!title || !content || !status || !category) {
       return res.status(400).json({
         success: false,
@@ -36,7 +48,7 @@ export const createBlog = async (req, res) => {
         coverImg,
         process.env.FOLDER_NAME
       );
-      console.log(complaintImgCloudinary);
+      console.log(coverImgCloudinary);
       imgUrl = coverImgCloudinary.secure_url;
     } else {
       imgUrl = "";
@@ -48,27 +60,35 @@ export const createBlog = async (req, res) => {
       .join('-')
       .toLowerCase()
       .replace(/[^a-zA-Z0-9-]/g, '');
+    console.log("Slug for blog: ", slug);
+    //find category id
+    const categoryDetails = await Category.findOne({ name: category });
     // 6. create blog
+    console.log("categoryDetails: ", categoryDetails)
     const blog = await Blog.create({
       title,
       content,
       createdBy: userId,
       status,
-      category,
-      tags,
+      category: categoryDetails._id,//this should be object id
+      tags,//this should be an array of strings
       coverImg: imgUrl,
       slug,
     });
     // 7. add this blog to user's blogs
     const user = await User.findByIdAndUpdate(userId,
-      { $push: { blogs: blog._id } });
+      {
+        $push: { blogs: blog._id },
+        $inc: { contributions: 5 }
+      });
     // 8. return response
     return res.status(201).json({
       success: true,
       message: "Blog created successfully",
       data: blog,
     });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -78,32 +98,6 @@ export const createBlog = async (req, res) => {
   }
 
 }
-export const getBlog = async (req, res) => {
-  try {
-    /*
-    1. get slug from request params
-    2. get blog by slug
-    3. return response
-    */
-    // 1. get slug from request params
-    const { slug } = req.params;
-    // 2. get blog by slug
-    const blog = await Blog.find({ slug }).populate("createdBy").populate("comments");
-    // 3. return response
-    return res.status(200).json({
-      success: true,
-      message: "Blog fetched successfully",
-      data: blog,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error in fetching the blog",
-      errorMessage: error.message,
-    });
-  }
-}
 export const getAllBlogs = async (req, res) => {
   try {
     /*
@@ -111,7 +105,47 @@ export const getAllBlogs = async (req, res) => {
     2. return response
     */
     // 1. get all blogs
-    const blogs = await Blog.find({}).populate("createdBy").populate("comments");
+    const blogs = await Blog.aggregate([
+      // Match only published blogs
+      { $match: { status: "Published" } },
+
+      // Lookup for User document to populate createdBy field
+      {
+        $lookup: {
+          from: "users",  // Assuming the collection name for User is "users"
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdBy"
+        }
+      },
+
+      // Unwind createdBy array created by $lookup
+      { $unwind: "$createdBy" },
+
+      // Lookup for Comment documents to populate comments field
+      {
+        $lookup: {
+          from: "comments",  // Assuming the collection name for Comment is "comments"
+          localField: "comments",
+          foreignField: "_id",
+          as: "comments"
+        }
+      },
+
+      // Lookup for Category documents to populate category field
+      {
+        $lookup: {
+          from: "categories",  // Assuming the collection name for Category is "categories"
+          localField: "category",
+          foreignField: "_id",
+          as: "category"
+        }
+      },
+
+      // Unwind category array created by $lookup
+      { $unwind: "$category" }
+    ]);
+
     // 2. return response
     return res.status(200).json({
       success: true,
@@ -127,6 +161,98 @@ export const getAllBlogs = async (req, res) => {
     });
   }
 }
+export const getMyBlogs = async (req, res) => {
+  try {
+    /*
+    1. get user id from req.user
+    2. get blogs by user
+    3. return response
+    */
+    // 1. get user id from req.user
+    const userId = req.user.id;
+    // 2. get blogs by user
+    const userDetails = await User.findById(userId).populate("blogs");
+    // 3. return response
+    return res.status(200).json({
+      success: true,
+      message: "Blogs fetched successfully",
+      data: userDetails,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in fetching the blogs",
+      errorMessage: error.message,
+    });
+  }
+}
+export const getBlog = async (req, res) => {
+  try {
+    /*
+    1. get slug from request params
+    2. get blog by slug
+    3. return response
+    */
+    // 1. get slug from request params
+    const { slug } = req.params;
+    // 2. get blog by slug
+    const blogs = await Blog.aggregate([
+      // Match only published blogs
+      { $match: { slug: slug } },
+
+      // Lookup for User document to populate createdBy field
+      {
+        $lookup: {
+          from: "users",  // Assuming the collection name for User is "users"
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdBy"
+        }
+      },
+
+      // Unwind createdBy array created by $lookup
+      { $unwind: "$createdBy" },
+
+      // Lookup for Comment documents to populate comments field
+      {
+        $lookup: {
+          from: "comments",  // Assuming the collection name for Comment is "comments"
+          localField: "comments",
+          foreignField: "_id",
+          as: "comments"
+        }
+      },
+
+      // Lookup for Category documents to populate category field
+      {
+        $lookup: {
+          from: "categories",  // Assuming the collection name for Category is "categories"
+          localField: "category",
+          foreignField: "_id",
+          as: "category"
+        }
+      },
+
+      // Unwind category array created by $lookup
+      { $unwind: "$category" }
+    ]);
+    // 3. return response
+    return res.status(200).json({
+      success: true,
+      message: "Blog fetched successfully",
+      data: blog,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in fetching the blog",
+      errorMessage: error.message,
+    });
+  }
+}
+
 export const getBlogsByCategory = async (req, res) => {
   try {
     /*
@@ -135,9 +261,13 @@ export const getBlogsByCategory = async (req, res) => {
     3. return response
     */
     // 1. get category from request params
+    console.log("printing req.params", req.params.category)
     const { category } = req.params;
     // 2. get blogs by category
-    const blogs = await Blog.find({ category }).populate("createdBy").populate("comments");
+    const categoryDetails = await Category.find({ name: category });
+    console.log("printing category details", categoryDetails)
+    const blogs = await Blog.find({ category: categoryDetails[0]._id }).populate("createdBy");
+
     // 3. return response
     return res.status(200).json({
       success: true,
@@ -153,32 +283,32 @@ export const getBlogsByCategory = async (req, res) => {
     });
   }
 }
-export const getBlogsByTag = async (req, res) => {
-  try {
-    /*
-    1. get tag from request params
-    2. get blogs by tag
-    3. return response
-    */
-    // 1. get tag from request params
-    const { tag } = req.params;
-    // 2. get blogs by tag
-    const blogs = await Blog.find({ tags: tag }).populate("createdBy").populate("comments");
-    // 3. return response
-    return res.status(200).json({
-      success: true,
-      message: "Blogs fetched successfully",
-      data: blogs,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error in fetching the blogs",
-      errorMessage: error.message,
-    });
-  }
-}
+// export const getBlogsByTag = async (req, res) => {
+//   try {
+//     /*
+//     1. get tag from request params
+//     2. get blogs by tag
+//     3. return response
+//     */
+//     // 1. get tag from request params
+//     const { tag } = req.params;
+//     // 2. get blogs by tag
+//     const blogs = await Blog.find({ tags: tag }).populate("createdBy").populate("comments");
+//     // 3. return response
+//     return res.status(200).json({
+//       success: true,
+//       message: "Blogs fetched successfully",
+//       data: blogs,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({
+//       success: false,
+//       message: "Internal Server Error in fetching the blogs",
+//       errorMessage: error.message,
+//     });
+//   }
+// }
 export const upvoteBlog = async (req, res) => {
   try {
     /*
@@ -190,7 +320,7 @@ export const upvoteBlog = async (req, res) => {
     6. return response
     */
     // 1. get blog id from request params
-    const { blogId } = req.params;
+    const { blogId } = req.body;
     // 2. get user id from req.user
     const userId = req.user.id;
     // 3. check if user has already upvoted
@@ -234,12 +364,13 @@ export const downvoteBlog = async (req, res) => {
     6. return response
     */
     // 1. get blog id from request params
-    const { blogId } = req.params;
+    const { blogId } = req.body;
     // 2. get user id from req.user
     const userId = req.user.id;
     // 3. check if user has already downvoted
-    const blog = await Blog.findById(blogId);
-    if (blog.downvotes.includes(userId)) {
+    let blog = await Blog.findById(blogId);
+    console.log("Printing blog", blog);
+    if (blog?.downvotes.includes(userId)) {
       // 4. if user has already downvoted, remove downvote
       blog.downvotes.pull(userId);
       await blog.save();
@@ -270,29 +401,29 @@ export const downvoteBlog = async (req, res) => {
 export const deleteBlog = async (req, res) => {
   try {
     /*
-    1. get blog id from request params
+    1. get blog id from request body
     2. get blog by id
     3. check if user is authorized to delete the blog
     4. delete blog
     5. return response
     */
-    // 1. get blog id from request params
-    const { blogId } = req.params;
-    // 2. get blog by id
-    const blog = await Blog.findById(blogId);
-    // 3. check if user is authorized to delete the blog
-    if (blog.createdBy.toString() !== req.user.id) {
-      return res.status(401).json({
-        success: false,
-        message: "You are not authorized to delete this blog",
-      });
-    }
-    // 4. delete blog
-    await blog.remove();
+    // 1. get blog id from request body
+    const { blogId } = req.body;
+    // 2. delete blogId from user's blogs
+    const userId = req.user.id;
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { blogs: blogId },
+        $inc: { contributions: -5 }
+      }
+    );
+    const deletedBlog = await Blog.findByIdAndDelete(blogId);
     // 5. return response
     return res.status(200).json({
       success: true,
       message: "Blog deleted successfully",
+      deletedBlog,
     });
   } catch (error) {
     console.log(error);
@@ -306,28 +437,46 @@ export const deleteBlog = async (req, res) => {
 export const updateBlog = async (req, res) => {
   try {
     /*
-    1. get blog id from request params
+    1. get blog id from request body
     2. get blog by id
     3. check if user is authorized to update the blog
     4. update blog
     5. return response
     */
-    // 1. get blog id from request params
-    const { blogId } = req.params;
+    // 1. get blog id from request body
+    console.log("print req.body", req.body);
+    const { blogId } = req.body;
     // 2. get blog by id
     const blog = await Blog.findById(blogId);
-    // 3. check if user is authorized to update the blog
-    if (blog.createdBy.toString() !== req.user.id) {
-      return res.status(401).json({
+    //status must be draft
+    if (blog.status === "Published") {
+      return res.status(400).json({
         success: false,
-        message: "You are not authorized to update this blog",
+        message: "Blog is already published, you can't update it"
       });
     }
     // 4. update blog
-    const updatedBlog = await Blog.findByIdAndUpdate(blogId, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const { title, content, status, category, tags, coverImg } = req.body;
+    let updateFields = {};
+    if (title !== undefined && title !== '') {
+      updateFields.title = title;
+    }
+    if (content !== undefined && content !== '') {
+      updateFields.content = content;
+    }
+    if (status !== undefined && status !== '') {
+      updateFields.status = status;
+    }
+    if (category !== undefined && category !== '') {
+      updateFields.category = category;
+    }
+    if (tags !== undefined && Array.isArray(tags) && tags.length > 0) {
+      updateFields.tags = tags;
+    }
+    if (coverImg !== undefined && coverImg !== '') {
+      updateFields.coverImg = coverImg;
+    }
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateFields, { new: true });
     // 5. return response
     return res.status(200).json({
       success: true,
@@ -343,58 +492,7 @@ export const updateBlog = async (req, res) => {
     });
   }
 }
-export const getBlogsByUser = async (req, res) => {
-  try {
-    /*
-    1. get user id from request params
-    2. get blogs by user
-    3. return response
-    */
-    // 1. get user id from request params
-    const { userId } = req.params;
-    // 2. get blogs by user
-    const blogs = await Blog.find({ createdBy: userId }).populate("createdBy").populate("comments");
-    // 3. return response
-    return res.status(200).json({
-      success: true,
-      message: "Blogs fetched successfully",
-      data: blogs,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error in fetching the blogs",
-      errorMessage: error.message,
-    });
-  }
-}
-export const getBlogsByStatus = async (req, res) => {
-  try {
-    /*
-    1. get status from request params
-    2. get blogs by status
-    3. return response
-    */
-    // 1. get status from request params
-    const { status } = req.params;
-    // 2. get blogs by status
-    const blogs = await Blog.find({ status }).populate("createdBy").populate("comments");
-    // 3. return response
-    return res.status(200).json({
-      success: true,
-      message: "Blogs fetched successfully",
-      data: blogs,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error in fetching the blogs",
-      errorMessage: error.message,
-    });
-  }
-}
+
 export const getBlogsByUpvotes = async (req, res) => {
   try {
     /*
@@ -402,7 +500,7 @@ export const getBlogsByUpvotes = async (req, res) => {
     2. return response
     */
     // 1. get blogs by upvotes
-    const blogs = await Blog.find({}).sort({ upvotes: -1 }).populate("createdBy").populate("comments");
+    const blogs = await Blog.find({}).sort({ upvotes: -1 }).populate("createdBy");
     // 2. return response
     return res.status(200).json({
       success: true,
@@ -418,66 +516,21 @@ export const getBlogsByUpvotes = async (req, res) => {
     });
   }
 }
-export const getBlogsByDate = async (req, res) => {
-  try {
-    /*
-    1. get blogs by date
-    2. return response
-    */
-    // 1. get blogs by date
-    const blogs = await Blog.find({}).sort({ createdAt: -1 }).populate("createdBy").populate("comments");
-    // 2. return response
-    return res.status(200).json({
-      success: true,
-      message: "Blogs fetched successfully",
-      data: blogs,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error in fetching the blogs",
-      errorMessage: error.message,
-    });
-  }
-}
-export const myBlog = async (req, res) => {
-  try {
-    /*
-    1. get user id from req.user
-    2. get blogs by user
-    3. return response
-    */
-    // 1. get user id from req.user
-    const userId = req.user.id;
-    // 2. get blogs by user
-    const blogs = await Blog.find({ createdBy: userId }).populate("createdBy").populate("comments");
-    // 3. return response
-    return res.status(200).json({
-      success: true,
-      message: "Blogs fetched successfully",
-      data: blogs,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      success: false,
-      message: "Internal Server Error in fetching the blogs",
-      errorMessage: error.message,
-    });
-  }
-}
+
+
 export const getBlogById = async (req, res) => {
   try {
     /*
-    1. get blog id from request params
+    1. get blog id from request param
     2. get blog by id
     3. return response
     */
-    // 1. get blog id from request params
+    // 1. get blog id from request param
     const { id } = req.params;
+    console.log(req.params);
     // 2. get blog by id
-    const blog = await Blog.findById(id).populate("createdBy").populate("comments");
+    const blog = await Blog.findById(id).populate("createdBy");
+    console.log("printing blog", blog);
     // 3. return response
     return res.status(200).json({
       success: true,

@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/user.model.js';
 import { OTP } from '../models/otp.model.js';
-import { AdditionalDetails } from '../models/additionalDetails.model.js';
+import { AdditionalDetails } from "../models/additionalDetails.schema.js";
+
 export const sendOtp = async (req, res) => {
   try {
     //fetch user's email from req.body
@@ -203,18 +204,28 @@ export const loginController = async (req, res) => {
     }
     //5. create Cookie and send Response
     const payload = {
-      userId: userDetails._id,
+      id: userDetails._id,
       role: userDetails.role,
       username: userDetails.username,
       email: userDetails.email,
+      contributions: userDetails.contributions,
     };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "2h",
     });
-    res.cookie("token", token);
+    userDetails.token = token;
+    userDetails.password = undefined;
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      expiresIn: new Date(Date.now() + 2 * 60 * 60 * 1000),//2 hours
+    });
     return res.status(200).json({
       success: true,
       message: "User logged in successfully",
+      token,
       data: userDetails,
     });
   } catch (error) {
