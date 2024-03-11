@@ -63,6 +63,13 @@ export const createBlog = async (req, res) => {
     console.log("Slug for blog: ", slug);
     //find category id
     const categoryDetails = await Category.findOne({ name: category });
+    if (!categoryDetails) {
+      return res.status(400).json({
+        success: false,
+        message: "Category not found"
+      });
+    }
+    categoryDetails.blogs.push(blog._id);
     // 6. create blog
     console.log("categoryDetails: ", categoryDetails)
     const blog = await Blog.create({
