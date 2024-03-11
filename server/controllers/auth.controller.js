@@ -238,4 +238,28 @@ export const loginController = async (req, res) => {
   }
 }
 
+export const getAllUserDeatils = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const userDetails = await User.findById(userId)
+      .populate('additionalDetails')
+      .populate('followers')
+      .populate('following')
+      .populate('blogs')
+      .exec();
+    return res.status(200).json({
+      success: true,
+      message: "All Users fetched successfully",
+      data: userDetails,
+    });
+  } catch (error) {
+    console.log('Error in getAllUserDeatils: ', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal Server Error',
+      errorMessage: error.message
+    });
+  }
+}
+
 
