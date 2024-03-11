@@ -6,7 +6,7 @@ export const createCategory = async (req, res) => {
   try {
     // Extract the category details from the request body
     const { name, description } = req.body;
-
+    console.log("Name and description", name, description)
     // Create a new category object
     const category = new Category({
       name,
