@@ -2,13 +2,16 @@ import jwt from 'jsonwebtoken';
 
 export const auth = async (req, res, next) => {
   try {
-    console.log("Printing req.headers: ", req.headers);
+    // console.log("printing req.body", req.body)
+    // console.log("printing req: ", req);
+    // console.log("Printing req.headers: ", req.headers);
     //extract token
+    // console.log("printing req.cookie: ", req.cookies);
     const token =
       req.cookies.token ||
       req.body.token ||
       req.header("Authorization").replace("Bearer ", "");
-    console.log("Printing token: ", token);
+    // console.log("Printing token: ", token);
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -36,6 +39,7 @@ export const auth = async (req, res, next) => {
 }
 export const isAdmin = async (req, res, next) => {
   try {
+
     if (req.user.role !== "admin") {
       return res.status(401).json({
         success: false,

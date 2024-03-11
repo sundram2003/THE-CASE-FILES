@@ -12,10 +12,6 @@ const additionalDetailsSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  contributions: {
-    type: Number,
-    default: 0
-  },
   profileImg: {
     type: String,
   },
@@ -24,7 +20,7 @@ const additionalDetailsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male,Female,Other"],
+    enum: ["Male", "Female", "Other"],
   }
 }, { timestamps: true });
 

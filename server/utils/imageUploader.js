@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary';
-const uploadImageToCloudinary = async (file, folder, height, quality) => {
+export const uploadImageToCloudinary = async (file, folder, height, quality) => {
   const options = { folder };
   if (height) {
     options.height = height;
@@ -12,5 +12,3 @@ const uploadImageToCloudinary = async (file, folder, height, quality) => {
   console.log("TempFile Path : ", file.tempFilePath);
   return await cloudinary.uploader.upload(file.tempFilePath, options);
 }
-
-export default uploadImageToCloudinary;
