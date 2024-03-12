@@ -152,7 +152,7 @@ const AboutUs = () => {
           />
           <DeveloperBox
             Name="Ayati"
-            role="Database and ML Developer"
+            role="CSS and ML Developer"
             from="MNNIT"
           />
         </div>
