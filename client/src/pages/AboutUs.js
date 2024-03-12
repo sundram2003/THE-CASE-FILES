@@ -36,11 +36,13 @@ import React from "react";
 import Footer from "../components/common/Footer";
 
 import aboutusbck from "../assets/images/CredLock_Aboutsus.jpeg";
-
+import first from "../assets/images/first.png";
+import sec from "../assets/images/sec.png";
+import third from "../assets/images/third.png";
 const AboutUs = () => {
   return (
-    <div>
-      <div className="flex flex-col justify-center items-center text-center text-black">
+    <div style={{ backgroundImage: `url(${sec})` }}>
+      <div className="flex flex-col justify-center items-center text-center text-black   ">
         <h1 className="mt-5 text-3xl font-bold">About CredLock</h1>
         <div className="flex flex-col justify-center items-center p-4">
           <p className="my-4">
