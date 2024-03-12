@@ -36,6 +36,11 @@ function Navbar() {
               About Us
             </button>
           </Link>
+          <Link to="/aboutUs">
+            <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
+              Contact Us
+            </button>
+          </Link>
         </div>
 
         {/* Search Bar */}
