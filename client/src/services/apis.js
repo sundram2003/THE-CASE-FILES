@@ -18,7 +18,7 @@ export const blogEndpoints = {
   CREATE_BLOG_API: BASE_URL + "/blog/create",
   GET_ALL_BLOGS_API: BASE_URL + "/blog/getallBlogs",
   GET_ALL_MY_BLOGS_API: BASE_URL + "/blog/getmyBlogs",
-  GET_BLOG_API: BASE_URL + "/blog/getBlog",
+  GET_BLOG_API: BASE_URL + "/blog/getBlogs",
   UPVOTE_BLOG: BASE_URL + "/blog/upvoteBlog",
   DOWNVOTE_BLOG: BASE_URL + "/blog/downvoteBlog",
   GET_BLOG_COMMENTS: BASE_URL + "/blog/getBlogComments",

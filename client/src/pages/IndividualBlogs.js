@@ -9,17 +9,12 @@ import { getSingleBlog } from "../services/operations/blogAPI";
 const IndividualBlog = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
-  const [comments, setComments] = useState([]);
-  const [comment, setComment] = useState("");
   const { token } = useSelector((state) => state.auth);
-  const [showComments, setShowComments] = useState(false);
-  const [isLoadingComments, setIsLoadingComments] = useState(false);
-  console.log("blog", blog);
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const response = await getSingleBlog(id, token);
-        console.log("id", id);
         setBlog(response.data);
       } catch (error) {
         console.error("Error fetching blog:", error);
@@ -27,10 +22,10 @@ const IndividualBlog = () => {
     };
 
     fetchBlog();
-  }, [id]);
-
+  }, [id, token]);
+  console.log("blog", blog);
   if (!blog) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; // Render loading indicator while blog is being fetched
   }
 
   // const toggleComments = async (e) => {
@@ -78,10 +73,10 @@ const IndividualBlog = () => {
       <div>
         <div className="flex flex-col gap-y-2">
           <div className="flex flex-row gap-2 mt-6 mb-2">
-            <label className="mr-8 text-gray-100 font-bold text-xl">
+            <label className="mr-8 text-gray-700 font-bold text-xl">
               Title:
             </label>
-            <h1 className="mr-8 text-gray-100 font-bold text-xl">
+            <h1 className="mr-8 text-gray-900 font-bold text-xl">
               {blog.title}
             </h1>
           </div>
@@ -89,31 +84,35 @@ const IndividualBlog = () => {
           <div className="flex flex-row gap-2">
             <div className="flex flex-row gap-2">
               <img
-                src={blog.imageUrl}
+                src={blog.coverImg}
                 alt="Blog Image"
                 className="h-[300px] w-[400px] rounded-lg object-cover"
               />
             </div>
 
             <div className="flex flex-col gap-2 ml-5">
-              <label className="mr-8 text-gray-100">Content:</label>{" "}
-              <p className="text-yellow-100">{blog.content}</p>
+              <label className="mr-8 text-slate-700">Content:</label>{" "}
+              <p className="text-yellow-800">{blog?.content}</p>
             </div>
           </div>
 
           <div className="flex flex-row gap-2">
             <div className="flex flex-row gap-2">
-              <label className="mt-2 text-gray-100">Upvotes:</label>
-              <h1 className="mr-6 mt-2.5 text-gray-100">{blog.upvotes}</h1>
+              <label className="mt-2 text-gray-500">Upvotes:</label>
+              <h1 className="mr-6 mt-2.5 text-gray-600">
+                {blog?.upvotes.length}
+              </h1>
             </div>
 
             <div className="flex flex-row gap-2">
-              <label className="mt-2 text-gray-100">Downvotes:</label>
-              <h1 className="mr-6 mt-2.5 text-gray-100">{blog.downvotes}</h1>
+              <label className="mt-2 text-gray-700">Downvotes:</label>
+              <h1 className="mr-6 mt-2.5 text-gray-800">
+                {blog?.downvotes.length}
+              </h1>
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="mr-8 mt-1.5 text-gray-100">Status:</label>
+              <label className="mr-8 mt-1.5 text-gray-800">Status:</label>
               <h1
                 style={{ color: blog.status === "Published" ? "green" : "red" }}
               >
@@ -122,8 +121,10 @@ const IndividualBlog = () => {
             </div>
 
             <div className="flex flex-col align-center gap-1">
-              <label className="mr-8 mt-1.5 text-gray-100">Created By:</label>
-              <h1 className="mr-8 text-gray-100">{blog.createdBy}</h1>
+              <label className="mr-8 mt-1.5 text-gray-600">Created By:</label>
+              <h1 className="mr-8 text-gray-800">
+                {blog?.createdBy?.username}
+              </h1>
             </div>
           </div>
 

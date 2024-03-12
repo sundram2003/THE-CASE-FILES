@@ -24,7 +24,7 @@ const AllBlogs = () => {
   }, []);
   console.log("blogs", blogs);
   const handleReadMore = (blogId) => {
-    navigate(`/blog/${blogId}`); // Redirect to single blog page
+    navigate(`/blog/getBlogs/${blogId}`); // Redirect to single blog page
   };
 
   return (
