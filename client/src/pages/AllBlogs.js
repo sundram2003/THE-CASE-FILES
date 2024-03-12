@@ -36,7 +36,8 @@ const AllBlogs = () => {
             imageUrl={blog.coverImg}
             date={formattedDate(blog.updatedAt)}
             title={blog.title}
-            content={blog.content}
+            content={blog.content.split(" ").slice(0, 20).join(" ")} // Trim the content to 20 words
+            status={blog.status}
             author={blog.createdBy.username}
             comments={blog?.comments?.length}
             downvotes={blog?.downvotes?.length}

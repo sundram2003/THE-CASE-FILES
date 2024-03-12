@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getMyBlogs } from "../services/operations/blogAPI";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
-import BlogCard from "../components/common/BlogCard";
+import BlogCard from "../components/common/AllBlogsCard";
 import EditBlog from "./EditBlog";
 import { BiEdit } from "react-icons/bi";
 
