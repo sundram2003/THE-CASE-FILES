@@ -1,34 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import BlogCard from "../components/common/AllBlogsCard";
-import "../utils/HomeCard.css";
+import { getAllBlogs } from "../services/operations/blogAPI";
+import { formattedDate } from "../utils/formattedDate";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import IndividualBlog from "./IndividualBlogs";
+
 const AllBlogs = () => {
-  const blogs = [
-    {
-      image: "dummy-image1.jpg",
-      date: "2022-01-01",
-      title: "Dummy Blog 1",
-      content: "This is a dummy blog 1",
-      author: "John Doe",
-      comments: 10,
-    },
-    {
-      image: "dummy-image2.jpg",
-      date: "2022-01-02",
-      title: "Dummy Blog 2",
-      content: "This is a dummy blog 2",
-      author: "Jane Smith",
-      comments: 5,
-    },
-    {
-      image: "dummy-image3.jpg",
-      date: "2022-01-03",
-      title: "Dummy Blog 3",
-      content: "This is a dummy blog 3",
-      author: "Bob Johnson",
-      comments: 2,
-    },
-    // List of blog data
-  ];
+  const [blogs, setBlogs] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await getAllBlogs(null);
+        const data = response?.data;
+        setBlogs(data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+  console.log("blogs", blogs);
+  const handleReadMore = (blogId) => {
+    navigate(`/blog/${blogId}`); // Redirect to single blog page
+  };
 
   return (
     <div className="container">
@@ -36,12 +33,15 @@ const AllBlogs = () => {
         {blogs.map((blog, index) => (
           <BlogCard
             key={index}
-            image={blog.image}
-            date={blog.date}
+            imageUrl={blog.coverImg}
+            date={formattedDate(blog.updatedAt)}
             title={blog.title}
             content={blog.content}
-            author={blog.author}
-            comments={blog.comments}
+            author={blog.createdBy.username}
+            comments={blog?.comments?.length}
+            downvotes={blog?.downvotes?.length}
+            upvotes={blog?.upvotes?.length}
+            onReadMore={() => handleReadMore(blog._id)} // Pass the handleReadMore function as a prop
           />
         ))}
       </div>

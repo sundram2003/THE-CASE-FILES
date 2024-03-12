@@ -1,31 +1,92 @@
 import React from "react";
-import "../../utils/HomeCard.css";
-const BlogCard = ({ image, date, title, content, author, comments }) => {
+import "./card.css";
+import { Link, useNavigate } from "react-router-dom";
+import EditBlog from "../../pages/EditBlog";
+const BlogCard = ({
+  id,
+  date,
+  title,
+  author,
+  comments,
+  imageUrl,
+  content,
+  followers,
+  following,
+  downvotes,
+  upvotes,
+  onReadMore,
+  onEdit,
+  status,
+}) => {
+  // console.log("id of that blog", id);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    if (status === "Draft") {
+      // If blog status is "Draft", prevent both reading more and editing
+
+      console.log("blog is drafted");
+      return;
+      // }
+
+      // if (status !== "Published") {
+      //   // Redirect to the edit blog page using history.push
+      //   navigate(`/edit-blog/${id}`);
+    } else {
+      // Redirect to the individual blog page
+      onReadMore();
+    }
+  };
   return (
-    <div className="media blog-media">
-      <a href="#">
-        <img className="d-flex" src={image} alt="Generic placeholder image" />
-      </a>
-      <div className="circle">
-        <h5 className="day">{date.day}</h5>
-        <span className="month">{date.month}</span>
+    <article className="card card-style2" onClick={handleClick}>
+      <div className="card-img">
+        <img className="rounded-top" src={imageUrl} alt="Blog Cover" />
+        <div className="date">
+          <span>{date}</span>
+        </div>
       </div>
-      <div className="media-body">
-        <a href="#">
-          <h5 className="mt-0">{title}</h5>
-        </a>
-        <p>{content}</p>
-        <a href="#" className="post-link">
+      <div className="card-body">
+        <h3 className="h5">
+          <a href="#!">{title}</a>
+        </h3>
+        <p className="display-30">{content}</p>
+        <Link to={`/blog/getBlogs/${id}`} className="post-link">
           Read More
-        </a>
+        </Link>
+      </div>
+      <div className="card-footer">
         <ul>
-          <li>by: {author}</li>
-          <li className="text-right">
-            <a href="#">{comments} comments</a>
+          <li>
+            <a href="#!">
+              <i className="fas fa-user"></i>
+              {author}
+            </a>
           </li>
+          <li>
+            <a href="#!">
+              <i className="far fa-comment-dots"></i>
+              <span>{comments}</span>
+            </a>
+          </li>
+          <li>
+            <a href="#!">
+              <i className="fas fa-thumbs-down"></i>
+              <span>{downvotes}</span>
+            </a>
+          </li>
+          <li>
+            <a href="#!">
+              <i className="fas fa-thumbs-up"></i>
+              <span>{upvotes}</span>
+            </a>
+          </li>
+          {/* {status !== "Published" && (
+            <button className="btn btn-primary bg-slate-500" onClick={onEdit}>
+              Edit
+            </button>
+          )} */}
         </ul>
       </div>
-    </div>
+    </article>
   );
 };
 

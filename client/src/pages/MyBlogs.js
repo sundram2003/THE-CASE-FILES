@@ -1,36 +1,53 @@
-import React from "react";
-import BlogCard from "../components/common/BlogCard"; // Import the BlogCard component
-import "../components/common/card.css"; // Import the BlogPage component styles
-const BlogPage = () => {
-  // Sample data for blog posts
-  const blogPosts = [
-    {
-      date: "15 Sep",
-      title: "Loft therapy taking care of your home",
-      author: "Brittany Hucks",
-      comments: 26,
-      imageUrl: "https://www.bootdey.com/image/350x280/6A5ACD/000000",
-      content: "Loft therapy will be a thing of the past and here's why.",
-    },
-    {
-      date: "20 Sep",
-      title: "The art of interior design",
-      author: "John Smith",
-      comments: 12,
-      imageUrl: "https://www.bootdey.com/image/350x280/6A5ACD/000000",
-      content: "Discover the secrets of creating stunning interiors.",
-    },
-    {
-      date: "25 Sep",
-      title: "Tips for a cozy bedroom",
-      author: "Emily Johnson",
-      comments: 8,
-      imageUrl: "https://www.bootdey.com/image/350x280/6A5ACD/000000",
-      content: "Transform your bedroom into a cozy sanctuary.",
-    },
-    // Add more blog post data as needed
-  ];
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getMyBlogs } from "../services/operations/blogAPI";
+import { formattedDate } from "../utils/formattedDate";
+import { useSelector } from "react-redux";
+import BlogCard from "../components/common/BlogCard";
+import EditBlog from "./EditBlog";
 
+const BlogPage = () => {
+  const [blogs, setBlogs] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const { token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const response = await getMyBlogs(token);
+        console.log("response in all blogs", response?.data);
+        if (response) {
+          const data = response?.data;
+          setBlogs(data);
+        } else {
+          console.log("Not getting response");
+        }
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false); // Set loading to false when fetching is done
+      }
+    };
+    fetchBlogs();
+  }, [token]);
+
+  const handleReadMore = (blogId) => {
+    navigate(`/blog/getBlogs/${blogId}`); // Redirect to individual blog page
+    setLoading(true); // Set loading to true when editing starts
+  };
+
+  const handleEdit = (blogId, status) => {
+    if (status !== "Published") {
+      console.log("blogId", blogId);
+      // navigate(`/blog/update/${blogId}`); // Redirect to edit blog page with blogId
+      navigate(`/blog/update/${blogId}`); // Redirect to edit blog page with blogId // Render EditBlog component with id prop
+    } else {
+      // Handle error or display a message indicating that the blog cannot be edited
+      console.log("Cannot edit a published blog.");
+    }
+  };
+  console.log("Blog inside myBlogs", blogs);
   return (
     <section>
       <div className="container">
@@ -41,19 +58,29 @@ const BlogPage = () => {
           </h2>
         </div>
         <div className="row">
-          {/* Iterate through blogPosts array and render BlogCard for each blog post */}
-          {blogPosts.map((post, index) => (
-            <div key={index} className="col-lg-4 col-md-6 mb-2-6">
-              <BlogCard
-                date={post.date}
-                title={post.title}
-                author={post.author}
-                comments={post.comments}
-                imageUrl={post.imageUrl}
-                content={post.content}
-              />
-            </div>
-          ))}
+          {/* Display a loading message while fetching data */}
+          {loading ? (
+            <div className="text-center">Loading...</div>
+          ) : (
+            // Iterate through blogs array and render BlogCard for each blog
+            blogs?.blogs &&
+            blogs?.blogs.map((post, index) => (
+              <div key={index} className="col-lg-4 col-md-6 mb-2-6">
+                <BlogCard
+                  imageUrl={post.coverImg}
+                  date={formattedDate(post.updatedAt)}
+                  title={post.title}
+                  content={post.content}
+                  author={post.createdBy.username}
+                  comments={post?.comments?.length}
+                  downvotes={post?.downvotes?.length}
+                  upvotes={post?.upvotes?.length}
+                  onReadMore={() => handleReadMore(post._id)}
+                  onEdit={() => handleEdit(post._id, post.status)} // Pass status along with blogId
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>
