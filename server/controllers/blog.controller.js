@@ -451,8 +451,8 @@ export const updateBlog = async (req, res) => {
     5. return response
     */
     // 1. get blog id from request body
-    console.log("print req.body", req.body);
-    const { blogId } = req.body;
+    // console.log("print req.body", req.body);
+    const { blogId } = req.params;
     // 2. get blog by id
     const blog = await Blog.findById(blogId);
     //status must be draft
