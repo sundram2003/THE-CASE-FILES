@@ -28,4 +28,21 @@ export const createCategory = async (req, res) => {
     res.status(500).json({ message: 'Failed to create category' });
   }
 };
+export const getAllCategories = async (req, res) => {
+  try {
+    // Fetch all categories from the database
+    const categories = await Category.find({});
+
+    // Return the fetched categories as the response
+    res.status(200).json({
+      success: true,
+      message: 'Categories fetched successfully',
+      categories
+    });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error(error);
+    res.status(500).json({ message: 'Failed to fetch categories' });
+  }
+}
 

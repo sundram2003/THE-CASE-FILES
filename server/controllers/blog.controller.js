@@ -463,8 +463,25 @@ export const updateBlog = async (req, res) => {
       });
     }
     // 4. update blog
-    const { title, content, status, category, tags, coverImg } = req.body;
+    const { title, content, status, prevCategory, category, tags, coverImg } = req.body;
+    let categoryDetails;
     let updateFields = {};
+    if (prevCategory) {
+      const prevCategoryDetails = await Category.findOne({ name: prevCategory });
+      prevCategoryDetails.blogs.pull(blog._id);
+      await prevCategoryDetails.save();
+    }
+    if (category) {
+      categoryDetails = await Category.findOne({ name: category });
+      if (!categoryDetails) {
+        return res.status(400).json({
+          success: false,
+          message: "Category not found"
+        });
+      }
+      categoryDetails.blogs.push(blog._id);
+      updateFields.category = categoryDetails._id;
+    }
     if (title !== undefined && title !== '') {
       updateFields.title = title;
     }
@@ -537,6 +554,9 @@ export const getBlogById = async (req, res) => {
     console.log(req.params);
     // 2. get blog by id
     const blog = await Blog.findById(id).populate("createdBy");
+    if (blog.comments.length > 0) {
+      blog.comments = await Comment.find({ _id: { $in: blog.comments } }).populate("createdBy");
+    }
     console.log("printing blog", blog);
     // 3. return response
     return res.status(200).json({
