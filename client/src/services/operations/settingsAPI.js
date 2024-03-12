@@ -21,7 +21,7 @@ export const fetchUserDetails = createAsyncThunk(
         throw new Error(response.data.message);
       }
       console.log("fetching user details api", response);
-      return response.data.userDetails;
+      return response.data.user;
     } catch (error) {
       console.log("fetching user details api", error);
 

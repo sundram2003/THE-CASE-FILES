@@ -127,7 +127,7 @@ const IndividualBlog = () => {
               </h1>
             </div>
           </div>
-
+          {/* adding comment portion */}
           {/* <div className="flex flex-col gap-2">
             <div>
               <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

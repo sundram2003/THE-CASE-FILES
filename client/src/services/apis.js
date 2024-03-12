@@ -8,7 +8,7 @@ export const endpoints = {
 export const settingsEndpoints = {
   CHANGE_PASSWORD_API: BASE_URL + "/auth/changePassword",
   DELETE_PROFILE_API: BASE_URL + "/profile/deleteProfile",
-  GET_USER_DETAILS_API: BASE_URL + "/profile/getUserDetails",
+  GET_USER_DETAILS_API: BASE_URL + "/auth/getAllUserDetails",
   HANDLE_SEARCH_API: BASE_URL + "/profile/handleSearch",
   BLOCK_USER_API: BASE_URL + "/profile/blockUser",
   UNBLOCK_USER_API: BASE_URL + "/profile/unblockUser",

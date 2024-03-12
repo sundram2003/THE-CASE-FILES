@@ -11,6 +11,7 @@ const BlogPage = () => {
   const [loading, setLoading] = useState(true); // Loading state
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  console.log("myblogs", blogs);
 
   useEffect(() => {
     const fetchBlogs = async () => {

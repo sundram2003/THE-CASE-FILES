@@ -5,46 +5,49 @@ import IconBtn from "../common/IconBtn";
 import { RiEditBoxLine } from "react-icons/ri";
 import { ACCOUNT_TYPE } from "../../utils/constant";
 import { formattedDate } from "../../utils/formattedDate";
+import { fetchUserDetails } from "../../services/operations/settingsAPI";
+import { setLoading } from "../../slices/profileSlice";
 
 export default function MyProfile() {
-  let userDetails = {
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@example.com",
-    follower: 100,
-    following: 200,
-    blogs: 10,
-    additionalDetails: {
-      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-      gender: "Male",
-    },
-  };
+  // let userDetails = {
+  //   firstName: "John",
+  //   lastName: "Doe",
+  //   email: "johndoe@example.com",
+  //   follower: 100,
+  //   following: 200,
+  //   blogs: 10,
+  //   additionalDetails: {
+  //     about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+  //     gender: "Male",
+  //   },
+  // };
   //   let user = {
   //     dummy: "dummy value",
   //   };
-  //   const { user, userDetails, loading, error } = useSelector((state) => ({
-  //     user: state.profile,
-  //     userDetails: state.profile.userDetails,
-  //     loading: state.profile.loading,
-  //     error: state.profile.error,
-  //   }));
+  const { user, userDetails, loading, error } = useSelector((state) => ({
+    user: state.profile.user,
+    userDetails: state.profile.user.additionalDetails,
+    loading: state.profile.loading,
+    error: state.profile.error,
+  }));
   // const { user } = useSelector((state) => state.profile);
-  //   console.log("user", user);
+  console.log("user", user);
   console.log("userDetails", userDetails);
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   // ...
+  console.log("token", token);
 
-  //   useEffect(() => {
-  //     setLoading(true);
-  //     try {
-  //       dispatch(fetchUserDetails(token));
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.log("error in fetching user details");
-  //     }
-  //   }, [dispatch, token]);
+  useEffect(() => {
+    setLoading(true);
+    try {
+      dispatch(fetchUserDetails(token));
+      setLoading(false);
+    } catch (error) {
+      console.log("error in fetching user details");
+    }
+  }, [dispatch, token]);
 
   return (
     <div className="">
@@ -54,27 +57,27 @@ export default function MyProfile() {
       <div className="flex items-center justify-between rounded-md border-[1px]  p-8 px-12">
         <div className="flex items-center gap-x-4">
           <img
-            src={userDetails?.img}
-            alt={`profile-${userDetails?.firstName}`}
+            src={userDetails?.profileImg}
+            alt={`profile-${user?.firstName}`}
             className="aspect-square w-[78px] rounded-full object-cover"
           />
           <div className="space-y-1">
             <p className="text-lg font-semibold text-slate-800">
-              {userDetails?.firstName + " " + userDetails?.lastName}
+              {user?.firstName + " " + user?.lastName}
             </p>
-            <p className="text-sm text-slate-800">{userDetails?.email}</p>
+            <p className="text-sm text-slate-800">{user?.email}</p>
           </div>
           <div className="flex flex-row gap-1 p-1">
             <h2>Follower</h2>
-            <p>{userDetails?.follower}</p>
+            <p>{user?.follower?.length}</p>
           </div>
           <div className="flex flex-row gap-1 p-1">
             {" "}
             <h2> Following</h2>
-            <p>{userDetails?.following}</p>
+            <p>{user?.following?.length}</p>
           </div>
           <div className="flex flex-row gap-1 p-1">
-            <p>{userDetails.blogs}</p>
+            <p>{user?.blogs?.length}</p>
             <h2>Blogs</h2>
           </div>
         </div>
@@ -102,32 +105,29 @@ export default function MyProfile() {
         </div>
         <p
           className={`${
-            userDetails?.additionalDetails?.about
-              ? "text-slate-600"
-              : "text-slate-500"
+            userDetails?.about ? "text-slate-600" : "text-slate-500"
           } text-sm font-medium`}
         >
-          {userDetails?.additionalDetails?.about ??
-            "Write Something About Yourself"}
+          {userDetails?.about ?? "Write Something About Yourself"}
         </p>
         <div className="flex max-w-[500px] justify-between">
           <div className="flex flex-col gap-y-5">
             <div>
               <p className="mb-2 text-sm text-slate-800">First Name</p>
               <p className="text-sm font-medium text-slate-600">
-                {userDetails?.firstName}
+                {user?.firstName}
               </p>
             </div>
             <div>
               <p className="mb-2 text-sm text-slate-800">Email</p>
               <p className="text-sm font-medium text-slate-600">
-                {userDetails?.email}
+                {user?.email}
               </p>
             </div>
             <div>
               <p className="mb-2 text-sm text-slate-800">Gender</p>
               <p className="text-sm font-medium text-slate-600">
-                {userDetails?.additionalDetails?.gender ?? "Add Gender"}
+                {userDetails?.gender ?? "Add Gender"}
               </p>
             </div>
           </div>
@@ -135,14 +135,13 @@ export default function MyProfile() {
             <div>
               <p className="mb-2 text-sm text-slate-800">Last Name</p>
               <p className="text-sm font-medium text-slate-600">
-                {userDetails?.lastName}
+                {user?.lastName}
               </p>
             </div>
             <div>
               <p className="mb-2 text-sm text-slate-800">Phone Number</p>
               <p className="text-sm font-medium text-slate-600">
-                {userDetails?.additionalDetails?.contactNo ??
-                  "Add Contact Number"}
+                {userDetails?.contactNo ?? "Add Contact Number"}
               </p>
             </div>
             {/* {(user.accountType === ACCOUNT_TYPE.STUDENT ||
@@ -160,8 +159,7 @@ export default function MyProfile() {
                 Date Of Birth
               </p>
               <p className="text-sm font-medium text-slate-600">
-                {formattedDate(userDetails?.additionalDetails?.DOB) ??
-                  "Add Date Of Birth"}
+                {formattedDate(userDetails?.DOB) ?? "Add Date Of Birth"}
               </p>
             </div>
           </div>
