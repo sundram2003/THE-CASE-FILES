@@ -1,11 +1,12 @@
 import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-// import { addBlog } from "../../slices/blogSlice";
+import { addBlog } from "../slices/blogSlice";
 // import { createBlog } from "../../services/operations/BlogAPI"; // assuming you have a createBlog function in BlogAPI.js
 import IconBtn from "../components/common/IconBtn";
 import { MdNavigateNext } from "react-icons/md";
 import JoditEditor from "jodit-react";
+import { createBlog } from "../services/operations/blogAPI";
 const CreateBlog = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
@@ -28,14 +29,16 @@ const CreateBlog = () => {
     formData.append("category", blogData.category);
     formData.append("tags", blogData.tags);
     formData.append("coverImg", blogData.coverImg[0]); // assuming coverImg is a file input
-
+    console.log("Blog Data", blogData);
     setLoading(true);
-    // try {
-    //   const result = await createBlog(formData, token);
-    //   dispatch(addBlog(result)); // Assuming result contains the newly created blog data
-    // } catch (error) {
-    //   console.error("Error creating blog:", error);
-    // }
+    try {
+      const result = await createBlog(formData, token);
+      console.log("result1", result);
+      dispatch(addBlog(result)); // Assuming result contains the newly created blog data
+      console.log("result of add blog", addBlog);
+    } catch (error) {
+      console.error("Error creating blog:", error);
+    }
     setLoading(false);
   };
 
@@ -68,17 +71,18 @@ const CreateBlog = () => {
         >
           Blog Content<sup className="text-red-900">*</sup>
         </label>
-        {/* <textarea
+        <textarea
           id="content"
           placeholder="Enter Blog Content"
           {...register("content", { required: true })}
           className="form-style resize-x-none min-h-[130px] w-full"
-        /> */}
-        <JoditEditor
+        />
+        {/* <JoditEditor
           ref={editor}
           value={content}
           onChange={(newContent) => setContent(newContent)}
-        />
+          onBlur={(e) => setValue("content", e.target.value)} // Ensure that the 'name' property is set correctly
+        /> */}
         {errors.content && (
           <span className="ml-2 text-xs tracking-wide text-pink-200">
             Blog Content is required**
@@ -95,8 +99,8 @@ const CreateBlog = () => {
           {...register("status", { required: true })}
           className="form-style w-full"
         >
-          <option value="draft">Draft</option>
-          <option value="published">Published</option>
+          <option value="Draft">Draft</option>
+          <option value="Published">Published</option>
         </select>
         {errors.status && (
           <span className="ml-2 text-xs tracking-wide text-red-900">

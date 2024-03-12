@@ -22,7 +22,7 @@ export const createBlog = async (data, token) => {
     console.log("response in create blog", response);
     const blogData = response;
     console.log("blogData", blogData);
-    if (!blogData?.success) {
+    if (!blogData?.data?.success) {
       throw new Error("Could Not Create Blog");
     }
     return blogData.data;
