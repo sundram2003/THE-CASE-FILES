@@ -105,6 +105,9 @@
 
 body {
   font-family: "Roboto", sans-serif;
+  .product-tumb img {
+    background-image: url("../../assets/images/third.png");
+  }
 }
 a {
   text-decoration: none;
