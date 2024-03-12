@@ -23,7 +23,7 @@ router.get('/getBlogByCategory/:category', getBlogsByCategory);
 router.put('/upvote', auth, upvoteBlog);
 router.put('/downvote', auth, downvoteBlog);
 router.delete('/delete', auth, deleteBlog);
-router.put('/update', auth, updateBlog);
+router.put('/update/:blogId', auth, updateBlog);
 router.get('/getBlogsByUpvote', getBlogsByUpvotes);
 
 
