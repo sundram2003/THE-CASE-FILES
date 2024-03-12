@@ -5,6 +5,7 @@ import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
 import BlogCard from "../components/common/BlogCard";
 import EditBlog from "./EditBlog";
+import { BiEdit } from "react-icons/bi";
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
@@ -48,6 +49,9 @@ const BlogPage = () => {
       console.log("Cannot edit a published blog.");
     }
   };
+  // const EditButton = ({ onClick }) => {
+  //   return <BiEdit onClick={onClick} />;
+  // };
   console.log("Blog inside myBlogs", blogs);
   return (
     <section>
@@ -77,8 +81,13 @@ const BlogPage = () => {
                   downvotes={post?.downvotes?.length}
                   upvotes={post?.upvotes?.length}
                   onReadMore={() => handleReadMore(post._id)}
-                  onEdit={() => handleEdit(post._id, post.status)} // Pass status along with blogId
                 />
+                {post.status === "Draft" && (
+                  <BiEdit
+                    id={post._id}
+                    onEdit={() => handleEdit(post._id, post.status)}
+                  />
+                )}
               </div>
             ))
           )}

@@ -4,7 +4,11 @@ import { useParams } from "react-router-dom";
 // import Comment from "./Comment";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
-import { getSingleBlog } from "../services/operations/blogAPI";
+import {
+  getSingleBlog,
+  dislikeBlog,
+  likeBlog,
+} from "../services/operations/blogAPI";
 
 const IndividualBlog = () => {
   const { id } = useParams();
@@ -27,6 +31,28 @@ const IndividualBlog = () => {
   if (!blog) {
     return <div>Loading...</div>; // Render loading indicator while blog is being fetched
   }
+
+  const handleUpVote = async () => {
+    try {
+      await likeBlog(id, token);
+      // Refresh the blog data after upvoting
+      const response = await getSingleBlog(id, token);
+      setBlog(response.data);
+    } catch (error) {
+      console.error("Error upvoting blog:", error);
+    }
+  };
+
+  const handleDownVote = async () => {
+    try {
+      await dislikeBlog(id, token);
+      // Refresh the blog data after downvoting
+      const response = await getSingleBlog(id, token);
+      setBlog(response.data);
+    } catch (error) {
+      console.error("Error downvoting blog:", error);
+    }
+  };
 
   // const toggleComments = async (e) => {
   //   e.preventDefault();
@@ -126,6 +152,11 @@ const IndividualBlog = () => {
                 {blog?.createdBy?.username}
               </h1>
             </div>
+          </div>
+          {/* Upvote and downvote buttons */}
+          <div>
+            <button onClick={handleUpVote}>Upvote</button>
+            <button onClick={handleDownVote}>Downvote</button>
           </div>
           {/* adding comment portion */}
           {/* <div className="flex flex-col gap-2">
