@@ -1,8 +1,8 @@
-import { BlockedUsers } from '../models/blockedUsers.model.js';
-import { Blog } from '../models/blogs.model.js';
-import { uploadImageToCloudinary } from '../utils/imageUploader.js';
-import { Category } from '../models/category.model.js';
-import { User } from '../models/user.model.js';
+import { BlockedUsers } from "../models/blockedUsers.model.js";
+import { Blog } from "../models/blogs.model.js";
+import { uploadImageToCloudinary } from "../utils/imageUploader.js";
+import { Category } from "../models/category.model.js";
+import { User } from "../models/user.model.js";
 export const createBlog = async (req, res) => {
   try {
     /*
@@ -19,13 +19,13 @@ export const createBlog = async (req, res) => {
 
     // 1.get users id from req.user
     const userId = req.user.id;
-    console.log(userId)
+    console.log(userId);
     // 2. check user is blocked or not
     const isBlockedUser = await BlockedUsers.findOne({ email: req.user.email });
     if (isBlockedUser) {
       return res.status(400).json({
         success: false,
-        message: "You are blocked by admin"
+        message: "You are blocked by admin",
       });
     }
     // 3. get parameters from request body
@@ -56,46 +56,46 @@ export const createBlog = async (req, res) => {
 
     // 5. creat a slug
     const slug = req.body.title
-      .split(' ')
-      .join('-')
+      .split(" ")
+      .join("-")
       .toLowerCase()
-      .replace(/[^a-zA-Z0-9-]/g, '');
+      .replace(/[^a-zA-Z0-9-]/g, "");
     console.log("Slug for blog: ", slug);
     //find category id
     const categoryDetails = await Category.findOne({ name: category });
     if (!categoryDetails) {
       return res.status(400).json({
         success: false,
-        message: "Category not found"
+        message: "Category not found",
       });
     }
-    categoryDetails.blogs.push(blog._id);
+
     // 6. create blog
-    console.log("categoryDetails: ", categoryDetails)
+    console.log("categoryDetails: ", categoryDetails);
     const blog = await Blog.create({
       title,
       content,
       createdBy: userId,
       status,
-      category: categoryDetails._id,//this should be object id
-      tags,//this should be an array of strings
+      category: categoryDetails._id, //this should be object id
+      tags, //this should be an array of strings
       coverImg: imgUrl,
       slug,
     });
+    categoryDetails.blogs.push(blog._id);
+    await categoryDetails.save();
     // 7. add this blog to user's blogs
-    const user = await User.findByIdAndUpdate(userId,
-      {
-        $push: { blogs: blog._id },
-        $inc: { contributions: 5 }
-      });
+    const user = await User.findByIdAndUpdate(userId, {
+      $push: { blogs: blog._id },
+      $inc: { contributions: 5 },
+    });
     // 8. return response
     return res.status(201).json({
       success: true,
       message: "Blog created successfully",
       data: blog,
     });
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -103,8 +103,7 @@ export const createBlog = async (req, res) => {
       errorMessage: error.message,
     });
   }
-
-}
+};
 export const getAllBlogs = async (req, res) => {
   try {
     /*
@@ -119,11 +118,11 @@ export const getAllBlogs = async (req, res) => {
       // Lookup for User document to populate createdBy field
       {
         $lookup: {
-          from: "users",  // Assuming the collection name for User is "users"
+          from: "users", // Assuming the collection name for User is "users"
           localField: "createdBy",
           foreignField: "_id",
-          as: "createdBy"
-        }
+          as: "createdBy",
+        },
       },
 
       // Unwind createdBy array created by $lookup
@@ -132,25 +131,25 @@ export const getAllBlogs = async (req, res) => {
       // Lookup for Comment documents to populate comments field
       {
         $lookup: {
-          from: "comments",  // Assuming the collection name for Comment is "comments"
+          from: "comments", // Assuming the collection name for Comment is "comments"
           localField: "comments",
           foreignField: "_id",
-          as: "comments"
-        }
+          as: "comments",
+        },
       },
 
       // Lookup for Category documents to populate category field
       {
         $lookup: {
-          from: "categories",  // Assuming the collection name for Category is "categories"
+          from: "categories", // Assuming the collection name for Category is "categories"
           localField: "category",
           foreignField: "_id",
-          as: "category"
-        }
+          as: "category",
+        },
       },
 
       // Unwind category array created by $lookup
-      { $unwind: "$category" }
+      { $unwind: "$category" },
     ]);
 
     // 2. return response
@@ -167,7 +166,7 @@ export const getAllBlogs = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 export const getMyBlogs = async (req, res) => {
   try {
     /*
@@ -193,7 +192,7 @@ export const getMyBlogs = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 export const getBlog = async (req, res) => {
   try {
     /*
@@ -211,11 +210,11 @@ export const getBlog = async (req, res) => {
       // Lookup for User document to populate createdBy field
       {
         $lookup: {
-          from: "users",  // Assuming the collection name for User is "users"
+          from: "users", // Assuming the collection name for User is "users"
           localField: "createdBy",
           foreignField: "_id",
-          as: "createdBy"
-        }
+          as: "createdBy",
+        },
       },
 
       // Unwind createdBy array created by $lookup
@@ -224,25 +223,25 @@ export const getBlog = async (req, res) => {
       // Lookup for Comment documents to populate comments field
       {
         $lookup: {
-          from: "comments",  // Assuming the collection name for Comment is "comments"
+          from: "comments", // Assuming the collection name for Comment is "comments"
           localField: "comments",
           foreignField: "_id",
-          as: "comments"
-        }
+          as: "comments",
+        },
       },
 
       // Lookup for Category documents to populate category field
       {
         $lookup: {
-          from: "categories",  // Assuming the collection name for Category is "categories"
+          from: "categories", // Assuming the collection name for Category is "categories"
           localField: "category",
           foreignField: "_id",
-          as: "category"
-        }
+          as: "category",
+        },
       },
 
       // Unwind category array created by $lookup
-      { $unwind: "$category" }
+      { $unwind: "$category" },
     ]);
     // 3. return response
     return res.status(200).json({
@@ -258,7 +257,7 @@ export const getBlog = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 
 export const getBlogsByCategory = async (req, res) => {
   try {
@@ -268,12 +267,14 @@ export const getBlogsByCategory = async (req, res) => {
     3. return response
     */
     // 1. get category from request params
-    console.log("printing req.params", req.params.category)
+    console.log("printing req.params", req.params.category);
     const { category } = req.params;
     // 2. get blogs by category
     const categoryDetails = await Category.find({ name: category });
-    console.log("printing category details", categoryDetails)
-    const blogs = await Blog.find({ category: categoryDetails[0]._id }).populate("createdBy");
+    console.log("printing category details", categoryDetails);
+    const blogs = await Blog.find({
+      category: categoryDetails[0]._id,
+    }).populate("createdBy");
 
     // 3. return response
     return res.status(200).json({
@@ -289,7 +290,7 @@ export const getBlogsByCategory = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 // export const getBlogsByTag = async (req, res) => {
 //   try {
 //     /*
@@ -359,7 +360,7 @@ export const upvoteBlog = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 export const downvoteBlog = async (req, res) => {
   try {
     /*
@@ -404,7 +405,7 @@ export const downvoteBlog = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 export const deleteBlog = async (req, res) => {
   try {
     /*
@@ -418,13 +419,10 @@ export const deleteBlog = async (req, res) => {
     const { blogId } = req.body;
     // 2. delete blogId from user's blogs
     const userId = req.user.id;
-    const user = await User.findByIdAndUpdate(
-      userId,
-      {
-        $pull: { blogs: blogId },
-        $inc: { contributions: -5 }
-      }
-    );
+    const user = await User.findByIdAndUpdate(userId, {
+      $pull: { blogs: blogId },
+      $inc: { contributions: -5 },
+    });
     const deletedBlog = await Blog.findByIdAndDelete(blogId);
     // 5. return response
     return res.status(200).json({
@@ -440,7 +438,7 @@ export const deleteBlog = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 export const updateBlog = async (req, res) => {
   try {
     /*
@@ -459,15 +457,18 @@ export const updateBlog = async (req, res) => {
     if (blog.status === "Published") {
       return res.status(400).json({
         success: false,
-        message: "Blog is already published, you can't update it"
+        message: "Blog is already published, you can't update it",
       });
     }
     // 4. update blog
-    const { title, content, status, prevCategory, category, tags, coverImg } = req.body;
+    const { title, content, status, prevCategory, category, tags, coverImg } =
+      req.body;
     let categoryDetails;
     let updateFields = {};
     if (prevCategory) {
-      const prevCategoryDetails = await Category.findOne({ name: prevCategory });
+      const prevCategoryDetails = await Category.findOne({
+        name: prevCategory,
+      });
       prevCategoryDetails.blogs.pull(blog._id);
       await prevCategoryDetails.save();
     }
@@ -476,31 +477,33 @@ export const updateBlog = async (req, res) => {
       if (!categoryDetails) {
         return res.status(400).json({
           success: false,
-          message: "Category not found"
+          message: "Category not found",
         });
       }
       categoryDetails.blogs.push(blog._id);
       updateFields.category = categoryDetails._id;
     }
-    if (title !== undefined && title !== '') {
+    if (title !== undefined && title !== "") {
       updateFields.title = title;
     }
-    if (content !== undefined && content !== '') {
+    if (content !== undefined && content !== "") {
       updateFields.content = content;
     }
-    if (status !== undefined && status !== '') {
+    if (status !== undefined && status !== "") {
       updateFields.status = status;
     }
-    if (category !== undefined && category !== '') {
+    if (category !== undefined && category !== "") {
       updateFields.category = category;
     }
     if (tags !== undefined && Array.isArray(tags) && tags.length > 0) {
       updateFields.tags = tags;
     }
-    if (coverImg !== undefined && coverImg !== '') {
+    if (coverImg !== undefined && coverImg !== "") {
       updateFields.coverImg = coverImg;
     }
-    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateFields, { new: true });
+    const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateFields, {
+      new: true,
+    });
     // 5. return response
     return res.status(200).json({
       success: true,
@@ -515,7 +518,7 @@ export const updateBlog = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 
 export const getBlogsByUpvotes = async (req, res) => {
   try {
@@ -524,7 +527,9 @@ export const getBlogsByUpvotes = async (req, res) => {
     2. return response
     */
     // 1. get blogs by upvotes
-    const blogs = await Blog.find({}).sort({ upvotes: -1 }).populate("createdBy");
+    const blogs = await Blog.find({})
+      .sort({ upvotes: -1 })
+      .populate("createdBy");
     // 2. return response
     return res.status(200).json({
       success: true,
@@ -539,8 +544,7 @@ export const getBlogsByUpvotes = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
-
+};
 
 export const getBlogById = async (req, res) => {
   try {
@@ -555,7 +559,9 @@ export const getBlogById = async (req, res) => {
     // 2. get blog by id
     const blog = await Blog.findById(id).populate("createdBy");
     if (blog.comments.length > 0) {
-      blog.comments = await Comment.find({ _id: { $in: blog.comments } }).populate("createdBy");
+      blog.comments = await Comment.find({
+        _id: { $in: blog.comments },
+      }).populate("createdBy");
     }
     console.log("printing blog", blog);
     // 3. return response
@@ -572,4 +578,4 @@ export const getBlogById = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
