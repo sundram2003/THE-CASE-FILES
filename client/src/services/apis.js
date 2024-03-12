@@ -26,4 +26,5 @@ export const blogEndpoints = {
   GET_ALL_UPVOTED_BLOGS: BASE_URL + "/blog/getAllUpvotedBlogs",
   GET_ALL_RECENT_BLOGS: BASE_URL + "/blog/getAllRecentBlogs",
   DELETE_BLOG: BASE_URL + "/blog/deleteBlog",
+  UPDATE_BLOG_API: BASE_URL + "/blog/update",
 };

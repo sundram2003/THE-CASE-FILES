@@ -160,6 +160,7 @@ export const updateBlog = async (
   content,
   status,
   category,
+  prevCategory,
   tags,
   coverImg,
   token
@@ -173,6 +174,7 @@ export const updateBlog = async (
         content,
         status,
         category,
+        prevCategory,
         tags,
         coverImg,
       },
