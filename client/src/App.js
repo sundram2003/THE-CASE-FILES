@@ -18,6 +18,7 @@ import Settings from "../src/components/Dashboard/Settings";
 import CreateBlog from "./pages/CreateBlog";
 import MyBlogs from "./pages/MyBlogs";
 import IndividualBlog from "./pages/IndividualBlogs";
+import EditBlog from "./pages/EditBlog";
 function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col font-inter">
@@ -39,8 +40,9 @@ function App() {
           <Route path="/dashboard/my-profile" element={<MyProfile />}></Route>
           <Route path="dashboard/Settings" element={<Settings />}></Route>
           <Route path="/dashboard/add-blog" element={<CreateBlog />}></Route>
-          <Route path="/dashboard/my-blog" element={<MyBlogs />}></Route>
-          <Route path="/blog/:id" element={<IndividualBlog />} />
+          <Route path="/blog/getMyBlogs" element={<MyBlogs />}></Route>
+          <Route path="/blog/getBlogs/:id" element={<IndividualBlog />} />
+          <Route path="/blog/update/:blogId" element={<EditBlog />} />
         </Route>
 
         <Route path="*" element={<Error />}></Route>

@@ -16,7 +16,7 @@ export const sidebarLinks = [
   {
     id: 3,
     name: "My Case Files",
-    path: "/dashboard/view-blog",
+    path: "/blog/getMyBlogs",
     icon: "VscNote",
   },
   {

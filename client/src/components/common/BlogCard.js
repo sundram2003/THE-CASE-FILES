@@ -1,8 +1,36 @@
 import React from "react";
 import "./card.css";
-const BlogCard = ({ date, title, author, comments, imageUrl, content }) => {
+import { Link } from "react-router-dom";
+import EditBlog from "../../pages/EditBlog";
+const BlogCard = ({
+  id,
+  date,
+  title,
+  author,
+  comments,
+  imageUrl,
+  content,
+  followers,
+  following,
+  downvotes,
+  upvotes,
+  onReadMore,
+  onEdit,
+  status,
+}) => {
+  // console.log("id of that blog", id);
+  const handleClick = () => {
+    if (status !== "Published") {
+      // Redirect to the edit blog page
+      <EditBlog edit={onEdit(id)} />;
+      // onEdit(id);
+    } else {
+      // Redirect to the individual blog page
+      onReadMore();
+    }
+  };
   return (
-    <article className="card card-style2">
+    <article className="card card-style2" onClick={handleClick}>
       <div className="card-img">
         <img className="rounded-top" src={imageUrl} alt="Blog Cover" />
         <div className="date">
@@ -14,9 +42,9 @@ const BlogCard = ({ date, title, author, comments, imageUrl, content }) => {
           <a href="#!">{title}</a>
         </h3>
         <p className="display-30">{content}</p>
-        <a href="#!" className="read-more">
-          Read more
-        </a>
+        <Link to={`/blog/getBlogs/${id}`} className="post-link">
+          Read More
+        </Link>
       </div>
       <div className="card-footer">
         <ul>
@@ -32,6 +60,23 @@ const BlogCard = ({ date, title, author, comments, imageUrl, content }) => {
               <span>{comments}</span>
             </a>
           </li>
+          <li>
+            <a href="#!">
+              <i className="fas fa-thumbs-down"></i>
+              <span>{downvotes}</span>
+            </a>
+          </li>
+          <li>
+            <a href="#!">
+              <i className="fas fa-thumbs-up"></i>
+              <span>{upvotes}</span>
+            </a>
+          </li>
+          {status !== "Published" && (
+            <button className="btn btn-primary bg-slate-500" onClick={onEdit}>
+              Edit
+            </button>
+          )}
         </ul>
       </div>
     </article>
