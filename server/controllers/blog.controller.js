@@ -274,7 +274,11 @@ export const getBlogsByCategory = async (req, res) => {
     console.log("printing category details", categoryDetails);
     const blogs = await Blog.find({
       category: categoryDetails[0]._id,
-    }).populate("createdBy");
+    }).populate({
+      path: "createdBy",
+      select: "-blogs -password -followers -following -token -resetPasswordExpires",
+    })
+      .exec();
 
     // 3. return response
     return res.status(200).json({
@@ -291,32 +295,34 @@ export const getBlogsByCategory = async (req, res) => {
     });
   }
 };
-// export const getBlogsByTag = async (req, res) => {
-//   try {
-//     /*
-//     1. get tag from request params
-//     2. get blogs by tag
-//     3. return response
-//     */
-//     // 1. get tag from request params
-//     const { tag } = req.params;
-//     // 2. get blogs by tag
-//     const blogs = await Blog.find({ tags: tag }).populate("createdBy").populate("comments");
-//     // 3. return response
-//     return res.status(200).json({
-//       success: true,
-//       message: "Blogs fetched successfully",
-//       data: blogs,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Internal Server Error in fetching the blogs",
-//       errorMessage: error.message,
-//     });
-//   }
-// }
+export const getBlogsByTag = async (req, res) => {
+  try {
+    /*
+    1. get tag from request params
+    2. get blogs by tag
+    3. return response
+    */
+    // 1. get tag from request params
+    const { tag } = req.params;
+    // 2. get blogs by tag
+    const blogs = await Blog.find({ tags: { $in: [tag] } })
+      .populate("createdBy")
+      .populate("comments");
+    // 3. return response
+    return res.status(200).json({
+      success: true,
+      message: "Blogs fetched successfully",
+      data: blogs,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in fetching the blogs",
+      errorMessage: error.message,
+    });
+  }
+}
 export const upvoteBlog = async (req, res) => {
   try {
     /*
@@ -463,7 +469,7 @@ export const updateBlog = async (req, res) => {
     // 4. update blog
     const { title, content, status, prevCategory, category, tags } =
       req.body;
-    // const coverImg = req.files.coverImg;
+    const coverImg = req.files.coverImg;
     let categoryDetails;
     let updateFields = {};
     if (prevCategory) {

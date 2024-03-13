@@ -6,6 +6,7 @@ import {
   getAllBlogs,
   getBlogById,
   getBlogsByCategory,
+  getBlogsByTag,
   getBlogsByUpvotes,
   getMyBlogs,
   updateBlog,
@@ -20,6 +21,7 @@ router.get("/getBlogs/:id", getBlogById);
 router.get('/getallblogs', getAllBlogs);
 router.get('/getmyBlogs', auth, getMyBlogs);
 router.get('/getBlogByCategory/:category', getBlogsByCategory);
+router.get('/getBlogsByTags/:tags', getBlogsByTag);
 router.put('/upvote', auth, upvoteBlog);
 router.put('/downvote', auth, downvoteBlog);
 router.delete('/delete', auth, deleteBlog);

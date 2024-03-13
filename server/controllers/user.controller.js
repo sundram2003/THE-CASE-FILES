@@ -65,3 +65,31 @@ export const unfollowUser = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 }
+export const getUserByUserName = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const user = await User.findOne({ username })
+      .populate("blogs")
+      .populate('additionalDetails')
+      .select("-password")
+      .exec();
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found"
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: "User found",
+      user
+    });
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    });
+  }
+}
