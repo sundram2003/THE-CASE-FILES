@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({
   useTempFiles: true,
-  path: '/tmp/',
+  tempFileDir: "/tmp/",
 }));
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/blog', blogRoutes);

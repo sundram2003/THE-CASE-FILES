@@ -461,8 +461,9 @@ export const updateBlog = async (req, res) => {
       });
     }
     // 4. update blog
-    const { title, content, status, prevCategory, category, tags, coverImg } =
+    const { title, content, status, prevCategory, category, tags } =
       req.body;
+    // const coverImg = req.files.coverImg;
     let categoryDetails;
     let updateFields = {};
     if (prevCategory) {
@@ -500,8 +501,14 @@ export const updateBlog = async (req, res) => {
     if (tags !== undefined && Array.isArray(tags) && tags.length > 0) {
       updateFields.tags = tags;
     }
+
     if (coverImg !== undefined && coverImg !== "") {
-      updateFields.coverImg = coverImg;
+      const coverImgCloudinary = await uploadImageToCloudinary(
+        coverImg,
+        process.env.FOLDER_NAME
+      );
+      console.log(coverImgCloudinary.secure_url);
+      updateFields.coverImg = coverImgCloudinary.secure_url;
     }
     const updatedBlog = await Blog.findByIdAndUpdate(blogId, updateFields, {
       new: true,
