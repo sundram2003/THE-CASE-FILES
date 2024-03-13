@@ -466,13 +466,11 @@ export const updateBlog = async (req, res) => {
     let categoryDetails;
     let updateFields = {};
     if (prevCategory) {
-      const prevCategoryDetails = await Category.findOne({
-        name: prevCategory,
-      });
+      const prevCategoryDetails = await Category.findById(prevCategory);
       prevCategoryDetails.blogs.pull(blog._id);
       await prevCategoryDetails.save();
     }
-    if (category) {
+    if (category) {//categoryName
       categoryDetails = await Category.findOne({ name: category });
       if (!categoryDetails) {
         return res.status(400).json({
@@ -483,17 +481,21 @@ export const updateBlog = async (req, res) => {
       categoryDetails.blogs.push(blog._id);
       updateFields.category = categoryDetails._id;
     }
+    let slug;
     if (title !== undefined && title !== "") {
       updateFields.title = title;
+      slug = title
+        .split(" ")
+        .join("-")
+        .toLowerCase()
+        .replace(/[^a-zA-Z0-9-]/g, "");
+      updateFields.slug = slug;
     }
     if (content !== undefined && content !== "") {
       updateFields.content = content;
     }
     if (status !== undefined && status !== "") {
       updateFields.status = status;
-    }
-    if (category !== undefined && category !== "") {
-      updateFields.category = category;
     }
     if (tags !== undefined && Array.isArray(tags) && tags.length > 0) {
       updateFields.tags = tags;
