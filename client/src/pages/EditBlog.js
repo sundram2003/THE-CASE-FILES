@@ -129,6 +129,7 @@ const EditBlog = () => {
 
   const submitBlogForm = async (data) => {
     console.log("data", data);
+    let coverImgData = data.coverImg ? data.coverImg[0] : null;
     const result = await updateBlog(
       blogId,
       data.title,
@@ -137,7 +138,7 @@ const EditBlog = () => {
       data.category,
       data.prevCategory, // Pass prevCategory to updateBlog function
       data.tags.split(",").map((tag) => tag.trim()),
-      data.coverImg,
+      coverImgData,
       token
     );
     console.log("result in updated blog", result);

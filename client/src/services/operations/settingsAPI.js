@@ -4,31 +4,35 @@ import { logout } from "./authAPI";
 // import { setLoading } from "../slices/authSlice";
 import { toast } from "react-hot-toast";
 import { settingsEndpoints } from "../apis";
+import { setUser } from "../../slices/profileSlice";
 
-const { GET_USER_DETAILS_API, UPDATE_PROFILE_API, DELETE_PROFILE_API } =
-  settingsEndpoints;
+const {
+  GET_USER_DETAILS_API,
+  UPDATE_PROFILE_API,
+  DELETE_PROFILE_API,
+  GET_USER_BY_USERNAME_API,
+  Follow_USER_API,
+  UNFOLLOW_USER_API,
+} = settingsEndpoints;
 
 // getting all userDetails
-export const fetchUserDetails = createAsyncThunk(
-  "user/fetchUserDetails",
-  async (token) => {
-    try {
-      const response = await apiConnector("GET", GET_USER_DETAILS_API, null, {
-        Authorization: `Bearer ${token}`,
-      });
+export const fetchUserDetails = async (token) => {
+  try {
+    const response = await apiConnector("GET", GET_USER_DETAILS_API, null, {
+      Authorization: `Bearer ${token}`,
+    });
 
-      if (!response.data.success) {
-        throw new Error(response.data.message);
-      }
-      console.log("fetching user details api", response);
-      return response.data.user;
-    } catch (error) {
-      console.log("fetching user details api", error);
-
-      throw error.response ? error.response.data : error.message;
+    if (!response.data.success) {
+      throw new Error(response.data.message);
     }
+    console.log("fetching user details api", response);
+    return response.data;
+  } catch (error) {
+    console.log("fetching user details api", error);
+
+    throw error.response ? error.response.data : error.message;
   }
-);
+};
 
 // update user details
 export function updateProfile(token, formData) {
@@ -78,3 +82,97 @@ export function deleteAccount(token, navigate) {
     toast.dismiss(toastId);
   };
 }
+
+// GetUser By username
+export const getUserByUsername = async (username, token) => {
+  try {
+    const response = await apiConnector(
+      "GET",
+      `${GET_USER_BY_USERNAME_API}/${username}`,
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("User by Username API RESPONSE: ", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch User by Username");
+    }
+
+    const user = response?.data?.user;
+    return user;
+  } catch (error) {
+    console.error("Error fetching user by username:", error);
+    throw error;
+  }
+};
+
+// follow user
+export const followUser = async (userId, token) => {
+  const toastId = toast.loading("Loading...");
+  let success = false;
+  let result = null;
+  try {
+    const response = await apiConnector(
+      "PUT",
+      Follow_USER_API,
+      { userId },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Follow User API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Follow User");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    result = response?.data;
+  } catch (error) {
+    success = false;
+    console.log("Follow User API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
+  toast.dismiss(toastId);
+  return result;
+};
+
+//unfollow user
+export const unfollowUser = async (userId, token) => {
+  const toastId = toast.loading("Loading...");
+  let success = false;
+  let result = null;
+  try {
+    const response = await apiConnector(
+      "PUT",
+      UNFOLLOW_USER_API,
+      { userId },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Unfollow User API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Unfollow User");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    result = response?.data;
+  } catch (error) {
+    success = false;
+    console.log("Unfollow User API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
+  toast.dismiss(toastId);
+  return result;
+};

@@ -6,48 +6,80 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { ACCOUNT_TYPE } from "../../utils/constant";
 import { formattedDate } from "../../utils/formattedDate";
 import { fetchUserDetails } from "../../services/operations/settingsAPI";
-import { setLoading } from "../../slices/profileSlice";
+import { setLoading, setUserDetails } from "../../slices/profileSlice";
 
 export default function MyProfile() {
-  // let userDetails = {
-  //   firstName: "John",
-  //   lastName: "Doe",
-  //   email: "johndoe@example.com",
-  //   follower: 100,
-  //   following: 200,
-  //   blogs: 10,
-  //   additionalDetails: {
-  //     about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  //     gender: "Male",
-  //   },
-  // };
-  //   let user = {
-  //     dummy: "dummy value",
+  // const { user, userDetails, loading, error } = useSelector((state) => ({
+  //   user: state.profile,
+  //   userDetails: state.profile,
+  //   loading: state.profile.loading,
+  //   error: state.profile.error,
+  // }));
+  // // const { user } = useSelector((state) => state.profile);
+
+  // const { token } = useSelector((state) => state.auth);
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
+  // // ...
+  // console.log("token", token);
+
+  // useEffect(() => {
+  //   const fetchUserDetailsAsync = async () => {
+  //     setLoading(true);
+
+  //     try {
+  //       const response = await fetchUserDetails(token);
+  //       // Handle the response data here
+  //       console.log("response in fetching user details", response);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.log("error in fetching user details");
+  //       setLoading(false);
+  //     }
   //   };
+
+  //   fetchUserDetailsAsync();
+  // }, [dispatch, token]);
   const { user, userDetails, loading, error } = useSelector((state) => ({
-    user: state.profile.user,
-    userDetails: state.profile.user.additionalDetails,
+    user: state?.profile?.userDetails?.data,
+    userDetails: state?.profile?.user,
     loading: state.profile.loading,
     error: state.profile.error,
   }));
-  // const { user } = useSelector((state) => state.profile);
-  console.log("user", user);
-  console.log("userDetails", userDetails);
+
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // ...
-  console.log("token", token);
 
   useEffect(() => {
-    setLoading(true);
-    try {
-      dispatch(fetchUserDetails(token));
-      setLoading(false);
-    } catch (error) {
-      console.log("error in fetching user details");
-    }
+    const fetchUserDetailsAsync = async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetchUserDetails(token);
+        // Update the user's state in Redux
+        dispatch(setUserDetails(response)); // Assuming response contains user details
+        setLoading(false);
+      } catch (error) {
+        console.log("error in fetching user details");
+        setLoading(false);
+      }
+    };
+
+    fetchUserDetailsAsync();
   }, [dispatch, token]);
+
+  if (loading) {
+    // Return a loading indicator until user details are fetched
+    return <div>Loading...</div>;
+  }
+
+  console.log("user", user);
+  console.log("userDetails", userDetails);
+  if (loading) {
+    // Return a loading indicator until user details are fetched
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="">
@@ -57,7 +89,7 @@ export default function MyProfile() {
       <div className="flex items-center justify-between rounded-md border-[1px]  p-8 px-12">
         <div className="flex items-center gap-x-4">
           <img
-            src={userDetails?.profileImg}
+            src={user?.additionalDetails?.profileImg}
             alt={`profile-${user?.firstName}`}
             className="aspect-square w-[78px] rounded-full object-cover"
           />
@@ -69,7 +101,7 @@ export default function MyProfile() {
           </div>
           <div className="flex flex-row gap-1 p-1">
             <h2>Follower</h2>
-            <p>{user?.follower?.length}</p>
+            <p>{user?.followers?.length}</p>
           </div>
           <div className="flex flex-row gap-1 p-1">
             {" "}
@@ -81,14 +113,6 @@ export default function MyProfile() {
             <h2>Blogs</h2>
           </div>
         </div>
-        <IconBtn
-          text="Edit"
-          onclick={() => {
-            navigate("/dashboard/settings");
-          }}
-        >
-          <RiEditBoxLine />
-        </IconBtn>
       </div>
       <div className="my-10 flex flex-col gap-y-10 rounded-md border-[1px] border-black-200 p-8 px-12">
         <div className="flex w-full items-center justify-between">
@@ -121,7 +145,7 @@ export default function MyProfile() {
             <div>
               <p className="mb-2 text-sm text-slate-800">Email</p>
               <p className="text-sm font-medium text-slate-600">
-                {user?.email}
+                {user?.username}
               </p>
             </div>
             <div>

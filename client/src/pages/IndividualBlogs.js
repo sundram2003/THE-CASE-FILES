@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 // import axios from "axios";
-// import Comment from "./Comment";
+// // import Comment from "./Comment";
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import "../utils/blog.css";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
 import {
@@ -9,6 +12,7 @@ import {
   dislikeBlog,
   likeBlog,
 } from "../services/operations/blogAPI";
+import { BiCommentDots, BiDislike, BiLike } from "react-icons/bi";
 
 const IndividualBlog = () => {
   const { id } = useParams();
@@ -37,7 +41,9 @@ const IndividualBlog = () => {
       await likeBlog(id, token);
       // Refresh the blog data after upvoting
       const response = await getSingleBlog(id, token);
+      console.log("after liked", response);
       setBlog(response.data);
+      console.log("blog liked");
     } catch (error) {
       console.error("Error upvoting blog:", error);
     }
@@ -49,6 +55,7 @@ const IndividualBlog = () => {
       // Refresh the blog data after downvoting
       const response = await getSingleBlog(id, token);
       setBlog(response.data);
+      console.log("blog disliked");
     } catch (error) {
       console.error("Error downvoting blog:", error);
     }
@@ -95,122 +102,135 @@ const IndividualBlog = () => {
   // };
 
   return (
-    <div>
-      <div>
-        <div className="flex flex-col gap-y-2">
-          <div className="flex flex-row gap-2 mt-6 mb-2">
-            <label className="mr-8 text-gray-700 font-bold text-xl">
-              Title:
-            </label>
-            <h1 className="mr-8 text-gray-900 font-bold text-xl">
-              {blog.title}
-            </h1>
+    <div className="container">
+      <div className="cs-blog-detail">
+        <div className="cs-main-post">
+          <figure>
+            <img
+              onLoad={() => {
+                /* handle onLoad event */
+              }}
+              data-pagespeed-url-hash="2714250504"
+              alt="jobline-blog (8)"
+              src={blog?.coverImg}
+            />
+          </figure>
+        </div>
+        <div className="cs-post-title">
+          <div className="cs-author">
+            <figure>
+              <a href="http://jobcareer.chimpgroup.com/jobdoor/user/jobcareer-admin/">
+                <img
+                  width="32"
+                  height="32"
+                  onLoad={() => {
+                    /* handle onLoad event */
+                  }}
+                  data-pagespeed-url-hash="1229941675"
+                  className="avatar avatar-32 photo"
+                  srcSet="http://1.gravatar.com/avatar/7a20fad302fc2dd4b4649dc5bdb3c463?s=64&amp;d=mm&amp;r=g 2x"
+                  src="http://1.gravatar.com/avatar/7a20fad302fc2dd4b4649dc5bdb3c463?s=32&amp;d=mm&amp;r=g"
+                  alt=""
+                />
+              </a>
+            </figure>
+            <div className="cs-text">
+              <a href="http://jobcareer.chimpgroup.com/jobdoor/user/jobcareer-admin/">
+                {blog?.createdBy?.firstName} {blog?.createdBy?.lastName}
+              </a>
+            </div>
           </div>
-
-          <div className="flex flex-row gap-2">
-            <div className="flex flex-row gap-2">
-              <img
-                src={blog.coverImg}
-                alt="Blog Image"
-                className="h-[300px] w-[400px] rounded-lg object-cover"
+          <div className="post-option">
+            <span className="post-date">
+              <i className="cs-color icon-calendar6"></i>
+              <BiLike aria-hidden="true" size={20} onClick={handleUpVote} />
+              {blog?.upvotes?.length}
+            </span>
+            <span className="post-date">
+              <i className="cs-color icon-calendar6"></i>
+              <BiDislike
+                aria-hidden="true"
+                size={20}
+                onClick={handleDownVote}
               />
-            </div>
+              {blog?.downvotes?.length}
+            </span>
+            <span className="post-date">
+              <a href="http://jobcareer.chimpgroup.com/jobdoor/2015/11/">
+                {/* <i className="cs-color icon-calendar6"></i> */}
+                {/* <FontAwesomeIcon
+                  icon={faCalendarAlt}
+                  className="cs-color icon-calendar6"
+                /> */}
+                {formattedDate(blog?.createdBy?.createdAt)}
+              </a>
+            </span>
+            <span className="post-comment">
+              <a href="http://jobcareer.chimpgroup.com/jobdoor/experience-writing-for-producing-a-newscast/#comments">
+                <i className="cs-color icon-chat6"></i>
+                {/* <div className="flex flex-row h-2"> */}
+                <p className="">
+                  {" "}
+                  <BiCommentDots aria-hidden="true" size={20} />
+                  {blog?.comments?.length}
+                </p>
 
-            <div className="flex flex-col gap-2 ml-5">
-              <label className="mr-8 text-slate-700">Content:</label>{" "}
-              <p className="text-yellow-800">{blog?.content}</p>
-            </div>
+                {/* </div> */}
+              </a>
+            </span>
           </div>
-
-          <div className="flex flex-row gap-2">
-            <div className="flex flex-row gap-2">
-              <label className="mt-2 text-gray-500">Upvotes:</label>
-              <h1 className="mr-6 mt-2.5 text-gray-600">
-                {blog?.upvotes.length}
-              </h1>
+        </div>
+        <div className="cs-post-option-panel">
+          <div className="rich-editor-text">
+            <h2 className="text-slate-900 font-serif text-xl uppercase">
+              {blog?.title}
+            </h2>
+            {/* <p></p>
+            <p>
+              After hamster hello less far astride where accordingly much
+              because some far innocently invoked far pre-set or objective this
+              pangolin tendentiously eagle near spread and overlay as abysmal a
+              and before walrus much therefore some close victorious jeepers
+              deeply forward while jeez and overlaid save hey ritually
+              notwithstanding mounted about nonchalantly and less hence far like
+              hey kissed. Hello impotent ravenous hey accordingly well much
+              lopsidedly one far blinked lorikeet sternly futile jeepers strewed
+              well following subconscious far on egregiously and away far alas
+              much forward in but far opposite less editorial some together.
+            </p> */}
+            {/* <h4>Simple answer is, because other candidates won’t.</h4> */}
+            {/* <p>
+              Ravenously while stridently coughed far promiscuously below jeez
+              much yikes bland that salamander cunningly some over abhorrent as
+              house with between ouch that well scurrilously alas capybara
+              massive outdid oh said hello majestically roadrunner lobster much
+              bled alas lighted together waved upheld.
+            </p> */}
+            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <blockquote className="text-left-align">
+                <span> {blog?.content}</span>
+              </blockquote>
             </div>
-
-            <div className="flex flex-row gap-2">
-              <label className="mt-2 text-gray-700">Downvotes:</label>
-              <h1 className="mr-6 mt-2.5 text-gray-800">
-                {blog?.downvotes.length}
-              </h1>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <label className="mr-8 mt-1.5 text-gray-800">Status:</label>
-              <h1
-                style={{ color: blog.status === "Published" ? "green" : "red" }}
-              >
-                {blog.status}
-              </h1>
-            </div>
-
-            <div className="flex flex-col align-center gap-1">
-              <label className="mr-8 mt-1.5 text-gray-600">Created By:</label>
-              <h1 className="mr-8 text-gray-800">
-                {blog?.createdBy?.username}
-              </h1>
-            </div>
+            <p></p>
           </div>
-          {/* Upvote and downvote buttons */}
-          <div>
-            <button onClick={handleUpVote}>Upvote</button>
-            <button onClick={handleDownVote}>Downvote</button>
+        </div>
+        <div className="cs-tags">
+          <div className="tags">
+            {blog?.tags.map((tag, index) => (
+              <span key={index}>
+                <ul>
+                  <li>
+                    <a
+                      rel="tag"
+                      href="http://jobcareer.chimpgroup.com/jobdoor/tag/college/"
+                    >
+                      {tag}
+                    </a>
+                  </li>
+                </ul>
+              </span>
+            ))}
           </div>
-          {/* adding comment portion */}
-          {/* <div className="flex flex-col gap-2">
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                Your Comment:
-              </label>
-              <textarea
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows="3"
-                className="block p-1 w-full text-l text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Write your comment here..."
-              ></textarea>
-              <button
-                className="ml-50 mt-3 mb-3 py-2 px-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-                onClick={handleAddComment}
-              >
-                Add Comment
-              </button>
-            </div>
-
-            <button
-              onClick={toggleComments}
-              disabled={isLoadingComments}
-              className="mt-3 mb-3 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-            >
-              {isLoadingComments
-                ? "Loading Comments..."
-                : showComments
-                ? "Hide Comments"
-                : "Show Comments"}
-            </button>
-
-            {showComments && (
-              <ul className="form-style text-white">
-                {comments.map((comment) => (
-                  <div key={comment._id}>
-                    <div class="mx-auto my-8 flex max-w-screen-sm rounded-xl border border-gray-100 p-4 text-left text-white-600 shadow-lg sm:p-8">
-                      <div class="w-full text-left">
-                        <div class="mb-2 flex flex-col justify-between text-white-600 sm:flex-row">
-                          <h3 class="font-medium">{comment?.userName}</h3>
-                          <time class="text-xs" datetime="2022-11-13T20:00Z">
-                            {formattedDate(comment.createdAt)}
-                          </time>
-                        </div>
-                        <p class="text-sm">{comment.text} </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </ul>
-            )}
-          </div> */}
         </div>
       </div>
     </div>

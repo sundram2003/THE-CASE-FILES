@@ -68,7 +68,9 @@ const BlogCard = ({
             {/* <img src={} alt="Profile Image" /> */}
 
             <BiUserCircle size={20} />
-            {author}
+            <span className="font-semibold">
+              <a href={`/auth/getUserByUsername/${author}`}>{author}</a>
+            </span>
           </div>
           <div className="product-price   ">
             {/* <img src={} alt="Profile Image" /> */}

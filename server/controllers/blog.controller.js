@@ -274,10 +274,12 @@ export const getBlogsByCategory = async (req, res) => {
     console.log("printing category details", categoryDetails);
     const blogs = await Blog.find({
       category: categoryDetails[0]._id,
-    }).populate({
-      path: "createdBy",
-      select: "-blogs -password -followers -following -token -resetPasswordExpires",
     })
+      .populate({
+        path: "createdBy",
+        select:
+          "-blogs -password -followers -following -token -resetPasswordExpires",
+      })
       .exec();
 
     // 3. return response
@@ -322,7 +324,7 @@ export const getBlogsByTag = async (req, res) => {
       errorMessage: error.message,
     });
   }
-}
+};
 export const upvoteBlog = async (req, res) => {
   try {
     /*
@@ -467,8 +469,7 @@ export const updateBlog = async (req, res) => {
       });
     }
     // 4. update blog
-    const { title, content, status, prevCategory, category, tags } =
-      req.body;
+    const { title, content, status, prevCategory, category, tags } = req.body;
     const coverImg = req.files.coverImg;
     let categoryDetails;
     let updateFields = {};
@@ -477,7 +478,8 @@ export const updateBlog = async (req, res) => {
       prevCategoryDetails.blogs.pull(blog._id);
       await prevCategoryDetails.save();
     }
-    if (category) {//categoryName
+    if (category) {
+      //categoryName
       categoryDetails = await Category.findOne({ name: category });
       if (!categoryDetails) {
         return res.status(400).json({

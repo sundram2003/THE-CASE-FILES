@@ -366,7 +366,10 @@ const RectangularBlogCard = ({
         <div className="rectangular-blog-card-bottom">
           <div className="flex justify-between">
             <div>
-              <span className="font-semibold">{author}</span>
+              <span className="font-semibold">
+                <a href={`/profile/${author}`}>{author}</a>
+              </span>
+              {/* <span className="font-semibold">{author}</span> */}
               <div className="flex flex-col gap-1 ">
                 <span className="text-sm text-gray-500 ml-2">
                   {followers} Followers
