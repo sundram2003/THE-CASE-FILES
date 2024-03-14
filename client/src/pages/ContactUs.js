@@ -1,15 +1,13 @@
 // import React from "react";
 // import Footer from "../components/common/Footer";
 
-
-
 // const ContactUs = () => {
 //   return (
 //     <div>
 //       <div className="flex flex-col justify-center items-center text-center text-black">
 //         <h1 className="mt-5 text-3xl font-bold">Contact Us</h1>
 //         <div className="flex flex-col justify-center items-center p-4">
-         
+
 //         </div>
 //         <div className="flex flex-col items-center mt-6">
 //           <img
@@ -30,6 +28,9 @@ import React from "react";
 import Footer from "../components/common/Footer";
 
 const ContactUs = () => {
+  const handleOnSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <div>
       <div className="flex flex-col justify-center items-center text-center text-black">
@@ -37,7 +38,7 @@ const ContactUs = () => {
         <div className="flex flex-col justify-center items-center p-4">
           <div className="bg-gray-200 p-8 rounded-md shadow-md w-96">
             <h2 className="text-xl font-semibold mb-4">Get in Touch</h2>
-            <form className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4" onSubmit={handleOnSubmit}>
               <div className="flex flex-row gap-4">
                 <input
                   type="text"
@@ -67,7 +68,10 @@ const ContactUs = () => {
               ></textarea>
             </form>
           </div>
-          <button className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+          <button
+            className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+            type="submit"
+          >
             Submit
           </button>
         </div>

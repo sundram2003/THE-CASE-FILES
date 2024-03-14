@@ -105,15 +105,12 @@
 
 body {
   font-family: "Roboto", sans-serif;
-  .product-tumb img {
-    background-image: url("../../assets/images/third.png");
-  }
 }
 a {
   text-decoration: none;
 }
 .product-card {
-  width: 380px;
+  width: 100%;
   position: relative;
   box-shadow: 0 2px 7px #dfdfdf;
   margin: 50px auto;
@@ -137,7 +134,7 @@ a {
   align-items: center;
   justify-content: center;
   height: 280px;
-  padding: 20px;
+  padding: 120px;
   background: #f0f0f0;
 }
 
@@ -155,7 +152,7 @@ a {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #4e4b4b;
+  color: #ccc;
   margin-bottom: 18px;
 }
 

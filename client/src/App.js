@@ -19,6 +19,8 @@ import CreateBlog from "./pages/CreateBlog";
 import MyBlogs from "./pages/MyBlogs";
 import IndividualBlog from "./pages/IndividualBlogs";
 import EditBlog from "./pages/EditBlog";
+import ContactUs from "./pages/ContactUs";
+import UserProfile from "./pages/UserProfile";
 function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col font-inter">
@@ -30,6 +32,8 @@ function App() {
         <Route path="/register" element={<Signup />}></Route>
         <Route path="/verify-email" element={<VerifyEmail />}></Route>
         <Route path="/aboutUs" element={<AboutUs />}></Route>
+        <Route path="/contactUs" element={<ContactUs />}></Route>
+
         <Route
           element={
             // <PrivateRoute>
@@ -43,6 +47,10 @@ function App() {
           <Route path="/blog/getMyBlogs" element={<MyBlogs />}></Route>
           <Route path="/blog/getBlogs/:id" element={<IndividualBlog />} />
           <Route path="/blog/update/:blogId" element={<EditBlog />} />
+          <Route
+            path="/auth/getUserByUsername/:username"
+            element={<UserProfile />}
+          />
         </Route>
 
         <Route path="*" element={<Error />}></Route>

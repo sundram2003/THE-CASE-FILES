@@ -7,9 +7,9 @@ function Navbar() {
   const { token } = useSelector((state) => state.auth);
   console.log("token", token);
   return (
-    <div className="header">
+    <div className="header ">
       {/* Top Navigation Bar */}
-      <nav className=" navbar flex justify-between items-center bg-gray-900 p-2 h-[70px]">
+      <nav className=" navbar flex justify-between items-center bg-gray-900 p-2 h-[90px]">
         {/* Logo */}
         <Link to="/">
           <img src={logo} alt="Logo" className="w-160 h-32 py-[-2px]" />
@@ -36,8 +36,8 @@ function Navbar() {
               About Us
             </button>
           </Link>
-          <Link to="/aboutUs">
-            <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
+          <Link to="/ContactUs">
+            <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500 ">
               Contact Us
             </button>
           </Link>

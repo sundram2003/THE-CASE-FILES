@@ -2,7 +2,12 @@ import React from "react";
 import "./card.css";
 import { Link, useNavigate } from "react-router-dom";
 import EditBlog from "../../pages/EditBlog";
-import { BiComment, BiCommentDots, BiUserCircle } from "react-icons/bi";
+import {
+  BiCalendar,
+  BiComment,
+  BiCommentDots,
+  BiUserCircle,
+} from "react-icons/bi";
 import { FaHeart, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 const BlogCard = ({
   id,
@@ -49,7 +54,7 @@ const BlogCard = ({
       <div className="product-details">
         <span className="product-catagory">{category}</span>
         <h4>
-          <a href="/">{title}</a>
+          <p className=" font-semibold uppercase text-amber-950 ">{title}</p>
         </h4>
         <p className="text-black">
           {content}
@@ -62,8 +67,22 @@ const BlogCard = ({
           <div className="product-price   ">
             {/* <img src={} alt="Profile Image" /> */}
 
-            <BiUserCircle />
-            {author}
+            <BiUserCircle size={20} />
+            <span className="font-semibold">
+              <a href={`/auth/getUserByUsername/${author}`}>{author}</a>
+            </span>
+          </div>
+          <div className="product-price   ">
+            {/* <img src={} alt="Profile Image" /> */}
+
+            <h3 className="text-black flex flex-row gap-1">
+              {" "}
+              <p>
+                {" "}
+                <BiCalendar size={24} />
+              </p>
+              <p>{date}</p>
+            </h3>
           </div>
 
           <div className="product-links flex flex-row gap-6">

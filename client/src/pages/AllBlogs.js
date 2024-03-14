@@ -36,11 +36,13 @@ const AllBlogs = () => {
             imageUrl={blog.coverImg}
             date={formattedDate(blog.updatedAt)}
             title={blog.title}
-            content={blog.content}
+            content={blog.content.split(" ").slice(0, 100).join(" ")} // Trim the content to 20 words
+            status={blog.status}
             author={blog.createdBy.username}
             comments={blog?.comments?.length}
             downvotes={blog?.downvotes?.length}
             upvotes={blog?.upvotes?.length}
+            category={blog.category?.name}
             onReadMore={() => handleReadMore(blog._id)} // Pass the handleReadMore function as a prop
           />
         ))}

@@ -14,11 +14,15 @@ const blogSlice = createSlice({
     coverImg: "",
     tags: "",
     category: "",
+    previousCategory: "",
   },
 
   reducers: {
     setBlogs(state, action) {
       state.blogs = action.payload;
+    },
+    setPrevCategory(state, action) {
+      state.previousCategory = action.payload;
     },
     setSelectedBlog(state, action) {
       state.selectedBlog = action.payload;
@@ -66,6 +70,7 @@ export const {
   setMostVotedBlog,
   setMostRecentBlog,
   setBlog,
+  setPrevCategory,
   addBlog,
   setTitle,
   setContent,

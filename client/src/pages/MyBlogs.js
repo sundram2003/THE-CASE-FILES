@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { getMyBlogs } from "../services/operations/blogAPI";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
-import BlogCard from "../components/common/BlogCard";
+import RectangularBlogCard from "../components/common/BlogCard";
 import EditBlog from "./EditBlog";
 import { BiEdit } from "react-icons/bi";
 
@@ -70,24 +70,21 @@ const BlogPage = () => {
             // Iterate through blogs array and render BlogCard for each blog
             blogs?.blogs &&
             blogs?.blogs.map((post, index) => (
-              <div key={index} className="col-lg-4 col-md-6 mb-2-6">
-                <BlogCard
+              <div key={index} className="col-lg-4 col-md-6 py-3 mb-2-6">
+                <RectangularBlogCard
                   imageUrl={post.coverImg}
                   date={formattedDate(post.updatedAt)}
                   title={post.title}
-                  content={post.content}
-                  author={post.createdBy.username}
+                  content={post.content.substring(0, 300) + "..."} // Trim content to 20 words
+                  author={post?.username}
                   comments={post?.comments?.length}
                   downvotes={post?.downvotes?.length}
                   upvotes={post?.upvotes?.length}
                   onReadMore={() => handleReadMore(post._id)}
+                  category={post.category?.name}
+                  status={post.status}
+                  onEdit={() => handleEdit(post._id, post.status)}
                 />
-                {post.status === "Draft" && (
-                  <BiEdit
-                    id={post._id}
-                    onEdit={() => handleEdit(post._id, post.status)}
-                  />
-                )}
               </div>
             ))
           )}

@@ -6,14 +6,15 @@ const {
   CREATE_BLOG_API,
   GET_ALL_BLOGS_API,
   GET_BLOG_API,
-  DISLIKE_BLOG_API,
-  LIKE_BLOG_API,
+  DOWNVOTE_BLOG,
+  UPVOTE_BLOG,
   UPDATE_BLOG_API,
   GET_ALL_MY_BLOGS_API,
 } = blogEndpoints;
 
 // create blog
 export const createBlog = async (data, token) => {
+  console.log("data in create blog", data);
   try {
     const response = await apiConnector("POST", CREATE_BLOG_API, data, {
       "Content-Type": "multipart/form-data",
@@ -22,6 +23,7 @@ export const createBlog = async (data, token) => {
     console.log("response in create blog", response);
     const blogData = response;
     console.log("blogData", blogData);
+    toast.success(blogData.data.message);
     if (!blogData?.data?.success) {
       throw new Error("Could Not Create Blog");
     }
@@ -42,6 +44,7 @@ export const getAllBlogs = async () => {
     if (!response?.data?.success) {
       throw new Error("Could Not Fetch All Blogs");
     }
+    toast.success(response.data.message);
     return response?.data;
   } catch (error) {
     console.log("GET ALL BLOGS API ERROR............", error);
@@ -74,7 +77,7 @@ export const likeBlog = async (blogId, token) => {
   try {
     const response = await apiConnector(
       "PUT",
-      LIKE_BLOG_API,
+      UPVOTE_BLOG,
       { blogId },
       {
         Authorization: `Bearer ${token}`,
@@ -108,7 +111,7 @@ export const dislikeBlog = async (blogId, token) => {
   try {
     const response = await apiConnector(
       "PUT",
-      DISLIKE_BLOG_API,
+      DOWNVOTE_BLOG,
       { blogId },
       {
         Authorization: `Bearer ${token}`,
@@ -160,11 +163,13 @@ export const updateBlog = async (
   content,
   status,
   category,
+  prevCategory,
   tags,
   coverImg,
   token
 ) => {
   try {
+    console.log("coverImg", coverImg);
     const response = await apiConnector(
       "PUT",
       `${UPDATE_BLOG_API}/${blogId}`,
@@ -173,6 +178,7 @@ export const updateBlog = async (
         content,
         status,
         category,
+        prevCategory,
         tags,
         coverImg,
       },
