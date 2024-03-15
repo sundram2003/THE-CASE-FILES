@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { updateProfile } from "../../../services/operations/settingsAPI";
 import IconBtn from "../../common/IconBtn";
-
+import React from "react";
 const genders = ["Male", "Female", "Non-Binary", "Prefer not to say", "Other"];
 
 export default function EditProfile() {

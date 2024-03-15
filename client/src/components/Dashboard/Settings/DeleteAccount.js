@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { deleteAccount } from "../../../services/operations/settingsAPI";
 import ConfirmationModal from "../../common/ConfirmationModal";
-
+import React from "react";
 export default function DeleteAccount() {
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();

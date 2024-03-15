@@ -8,7 +8,7 @@ import { sidebarLinks } from "./DashboardLinks";
 import ConfirmationModal from "../common/ConfirmationModal";
 import SidebarLink from "./SidebarLink";
 import { logout } from "../../services/operations/authAPI";
-
+import React from "react";
 export default function Sidebar() {
   //   const { user, loading: profileLoading } = useSelector(
   //     (state) => state.profile

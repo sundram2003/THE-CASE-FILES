@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"; // Import useNavigate from react
 import IndividualBlog from "./IndividualBlogs";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
-
+// import React from "react";
 const AllBlogs = ({ blogs }) => {
   //   const [blogs, setBlogs] = useState([]);
   const navigate = useNavigate();

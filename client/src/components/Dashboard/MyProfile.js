@@ -7,7 +7,7 @@ import { ACCOUNT_TYPE } from "../../utils/constant";
 import { formattedDate } from "../../utils/formattedDate";
 import { fetchUserDetails } from "../../services/operations/settingsAPI";
 import { setLoading, setUserDetails } from "../../slices/profileSlice";
-
+import React from "react";
 export default function MyProfile() {
   // const { user, userDetails, loading, error } = useSelector((state) => ({
   //   user: state.profile,
