@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlog } from "../slices/blogSlice";
-// import { createBlog } from "../../services/operations/BlogAPI"; // assuming you have a createBlog function in BlogAPI.js
 import IconBtn from "../components/common/IconBtn";
 import { MdNavigateNext } from "react-icons/md";
 import JoditEditor from "jodit-react";
@@ -20,6 +19,7 @@ const CreateBlog = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
+  const [tags, setTags] = useState([]);
 
   const onSubmit = async (blogData) => {
     const formData = new FormData();
@@ -125,7 +125,7 @@ const CreateBlog = () => {
           </span>
         )}
       </div>
-
+      {/* 
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-richblack-5" htmlFor="tags">
           Tags<sup className="text-red-900">*</sup>
@@ -136,6 +136,22 @@ const CreateBlog = () => {
           {...register("tags", { required: true })}
           className="form-style w-full"
         />
+        {errors.tags && (
+          <span className="ml-2 text-xs tracking-wide text-red-900">
+            Tags are required**
+          </span>
+        )}
+      </div> */}
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm text-richblack-5" htmlFor="tags">
+          Tags<sup className="text-red-900">*</sup>
+        </label>
+        {/* <ReactTagInput
+          id="tags"
+          placeholder="Enter Tags"
+          tags={tags}
+          onChange={(newTags) => setTags(newTags)}
+        /> */}
         {errors.tags && (
           <span className="ml-2 text-xs tracking-wide text-red-900">
             Tags are required**

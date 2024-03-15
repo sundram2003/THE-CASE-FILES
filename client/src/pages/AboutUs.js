@@ -1,4 +1,3 @@
-// import React from "react";
 // import Footer from "../components/common/Footer";
 
 // import aboutusbck from "../assets/images/CredLock_Aboutsus.jpeg";
@@ -150,11 +149,7 @@ const AboutUs = () => {
             role="Full Stack Developer"
             from="MNNIT"
           />
-          <DeveloperBox
-            Name="Ayati"
-            role="CSS and ML Developer"
-            from="MNNIT"
-          />
+          <DeveloperBox Name="Ayati" role="CSS and ML Developer" from="MNNIT" />
         </div>
       </div>
       <Footer />

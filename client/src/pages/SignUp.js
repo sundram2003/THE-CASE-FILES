@@ -4,7 +4,7 @@ import Footer from "../components/common/Footer";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setSignupData } from "../slices/authSlice";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { sendOtp } from "../services/operations/authAPI";
 const SignUp = () => {
   const navigate = useNavigate();

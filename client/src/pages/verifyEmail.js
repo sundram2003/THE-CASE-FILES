@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
 import OtpInput from "react-otp-input";
 import { RxCountdownTimer } from "react-icons/rx";
-
+import React from "react";
 export function VerifyEmail() {
   const [otp, setOtp] = useState("");
   const { signupData, loading } = useSelector((state) => state.auth);

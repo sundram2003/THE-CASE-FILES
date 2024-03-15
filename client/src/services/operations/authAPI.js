@@ -1,7 +1,7 @@
 import React from "react";
 import { endpoints } from "../apis";
 import { apiConnector } from "../apiconnector";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 import { setUser } from "../../slices/profileSlice";
 import { setLoading, setToken } from "../../slices/authSlice";
 const { SENDOTP_API, SIGNUP_API, LOGIN_API } = endpoints;
