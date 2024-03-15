@@ -92,7 +92,7 @@ export const likeBlog = async (blogId, token) => {
 
     toast.success(response.data.message);
     success = true;
-    result = response?.data;
+    result = response;
   } catch (error) {
     success = false;
     console.log("Like Blog API ERROR............", error);
@@ -126,7 +126,7 @@ export const dislikeBlog = async (blogId, token) => {
 
     toast.success(response.data.message);
     success = true;
-    result = response?.data;
+    result = response;
   } catch (error) {
     success = false;
     console.log("Dislike Blog API ERROR............", error);

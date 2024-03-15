@@ -3,22 +3,31 @@ import "../utils/profile.css";
 import {
   followUser,
   getUserByUsername,
+  unfollowUser,
 } from "../services/operations/settingsAPI";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FaUserCheck, FaCoins, FaHeart, FaComment } from "react-icons/fa";
+import {
+  FaUserCheck,
+  FaCoins,
+  FaHeart,
+  FaComment,
+  FaUserPlus,
+  FaUserMinus,
+} from "react-icons/fa";
 
 function UserProfile() {
   const { username } = useParams();
   const { token } = useSelector((state) => state.auth);
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true); // State variable for loading status
-
+  const [isFollowing, setIsFollowing] = useState(false);
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
         const response = await getUserByUsername(username, token);
         setUser(response);
+        setIsFollowing(response.followers.includes(user.username));
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.log("error in fetching user details", error);
@@ -28,14 +37,30 @@ function UserProfile() {
     fetchUserDetails();
   }, [username, token]);
 
-  const followhandler = async () => {
+  const followHandler = async () => {
     try {
       const response = await followUser(username, token);
+      if (response.data.success) {
+        setIsFollowing(true);
+      }
+
       console.log("response in fetching user details", response);
     } catch (error) {
       console.log("error in fetching user details", error);
     }
     console.log("followed");
+  };
+
+  //unfollow handler
+  const unfollowhandler = async () => {
+    try {
+      const response = await unfollowUser(username, token);
+      console.log("response in fetching user details", response);
+      if (response.data.success) setIsFollowing(false);
+    } catch (error) {
+      console.log("error in fetching user details", error);
+    }
+    console.log("unfollowed");
   };
 
   if (loading) {
@@ -54,15 +79,24 @@ function UserProfile() {
               <h1 className="profile-user-name mb-2 text-sm font-serif ">
                 {user?.username}
               </h1>
-              <button className="btn profile-edit-btn">Follow Profile</button>
-              <button
-                className="btn profile-settings-btn"
-                aria-label="profile settings"
-                onClick={followhandler}
-              >
-                <i className="fas fa-cog" aria-hidden="true"></i>
-                <FaUserCheck aria-hidden="true" />
-              </button>
+              {isFollowing ? (
+                <button
+                  className="btn profile-edit-btn"
+                  onClick={unfollowhandler}
+                >
+                  Unfollow
+                  <FaUserMinus aria-hidden="true" />
+                </button>
+              ) : (
+                <button
+                  className="btn profile-edit-btn"
+                  onClick={followHandler}
+                >
+                  Follow
+                  <FaUserPlus aria-hidden="true" />
+                </button>
+              )}
+              <FaUserPlus aria-hidden="true" />
             </div>
             <div className="profile-stats">
               <ul>
