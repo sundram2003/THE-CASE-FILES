@@ -4,11 +4,13 @@ import { getAllBlogs } from "../services/operations/blogAPI";
 import { formattedDate } from "../utils/formattedDate";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import IndividualBlog from "./IndividualBlogs";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const AllBlogs = () => {
   const [blogs, setBlogs] = useState([]);
   const navigate = useNavigate();
-
+  const { token } = useSelector((state) => state.auth);
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -24,7 +26,12 @@ const AllBlogs = () => {
   }, []);
   console.log("blogs", blogs);
   const handleReadMore = (blogId) => {
-    navigate(`/blog/getBlogs/${blogId}`); // Redirect to single blog page
+    if (token === null) {
+      toast.success("Please login to read more");
+      navigate(`/login`);
+    } else {
+      navigate(`/blog/getBlogs/${blogId}`); // Redirect to single blog page
+    }
   };
 
   return (
