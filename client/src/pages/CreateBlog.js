@@ -5,6 +5,8 @@ import { addBlog } from "../slices/blogSlice";
 import IconBtn from "../components/common/IconBtn";
 import { MdNavigateNext } from "react-icons/md";
 import JoditEditor from "jodit-react";
+import ReactTagInput from "@pathofdev/react-tag-input";
+import "@pathofdev/react-tag-input/build/index.css";
 import { createBlog } from "../services/operations/blogAPI";
 const CreateBlog = () => {
   const editor = useRef(null);
@@ -27,7 +29,7 @@ const CreateBlog = () => {
     formData.append("content", blogData.content);
     formData.append("status", blogData.status);
     formData.append("category", blogData.category);
-    formData.append("tags", blogData.tags);
+    formData.append("tags", tags.join(","));
     formData.append("coverImg", blogData.coverImg[0]); // assuming coverImg is a file input
     console.log("Blog Data", blogData);
     setLoading(true);
@@ -146,12 +148,12 @@ const CreateBlog = () => {
         <label className="text-sm text-richblack-5" htmlFor="tags">
           Tags<sup className="text-red-900">*</sup>
         </label>
-        {/* <ReactTagInput
+        <ReactTagInput
           id="tags"
           placeholder="Enter Tags"
           tags={tags}
           onChange={(newTags) => setTags(newTags)}
-        /> */}
+        />
         {errors.tags && (
           <span className="ml-2 text-xs tracking-wide text-red-900">
             Tags are required**

@@ -17,11 +17,11 @@ const {
 // create blog
 export const createBlog = async (data, token) => {
   console.log("data in create blog", data);
+  const response = await apiConnector("POST", CREATE_BLOG_API, data, {
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${token}`,
+  });
   try {
-    const response = await apiConnector("POST", CREATE_BLOG_API, data, {
-      "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
-    });
     console.log("response in create blog", response);
     const blogData = response;
     console.log("blogData", blogData);
@@ -32,6 +32,7 @@ export const createBlog = async (data, token) => {
     return blogData.data;
   } catch (error) {
     console.log("CREATE BLOG API ERROR............", error);
+    toast.error(response.data.message);
     throw error;
   }
 };
