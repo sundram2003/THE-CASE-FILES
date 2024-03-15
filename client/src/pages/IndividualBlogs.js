@@ -13,6 +13,7 @@ import {
   likeBlog,
 } from "../services/operations/blogAPI";
 import { BiCommentDots, BiDislike, BiLike } from "react-icons/bi";
+import { FaCalendarDay } from "react-icons/fa";
 
 const IndividualBlog = () => {
   const { id } = useParams();
@@ -118,36 +119,26 @@ const IndividualBlog = () => {
         </div>
         <div className="cs-post-title">
           <div className="cs-author">
-            <figure>
-              <a href="http://jobcareer.chimpgroup.com/jobdoor/user/jobcareer-admin/">
-                <img
-                  width="32"
-                  height="32"
-                  onLoad={() => {
-                    /* handle onLoad event */
-                  }}
-                  data-pagespeed-url-hash="1229941675"
-                  className="avatar avatar-32 photo"
-                  srcSet="http://1.gravatar.com/avatar/7a20fad302fc2dd4b4649dc5bdb3c463?s=64&amp;d=mm&amp;r=g 2x"
-                  src="http://1.gravatar.com/avatar/7a20fad302fc2dd4b4649dc5bdb3c463?s=32&amp;d=mm&amp;r=g"
-                  alt=""
-                />
-              </a>
-            </figure>
             <div className="cs-text">
-              <a href="http://jobcareer.chimpgroup.com/jobdoor/user/jobcareer-admin/">
+              <p className=" border-e-slate-900 bg-slate-200 p-3">
+                {blog?.status}
+              </p>
+              <a
+                href={`/auth/getUserByUsername/${blog?.createdBy?.username}`}
+                className=" font-extrabold text-2xl uppercase"
+              >
                 {blog?.createdBy?.firstName} {blog?.createdBy?.lastName}
               </a>
             </div>
           </div>
-          <div className="post-option">
+          <div className="flex flex-row gap-4 px-3 justify-end ">
             <span className="post-date">
               <i className="cs-color icon-calendar6"></i>
               <BiLike aria-hidden="true" size={20} onClick={handleUpVote} />
               {blog?.upvotes?.length}
             </span>
             <span className="post-date">
-              <i className="cs-color icon-calendar6"></i>
+              {/* <i className="cs-color icon-calendar6"></i> */}
               <BiDislike
                 aria-hidden="true"
                 size={20}
@@ -156,27 +147,17 @@ const IndividualBlog = () => {
               {blog?.downvotes?.length}
             </span>
             <span className="post-date">
-              <a href="http://jobcareer.chimpgroup.com/jobdoor/2015/11/">
-                {/* <i className="cs-color icon-calendar6"></i> */}
-                {/* <FontAwesomeIcon
-                  icon={faCalendarAlt}
-                  className="cs-color icon-calendar6"
-                /> */}
-                {formattedDate(blog?.createdBy?.createdAt)}
-              </a>
+              <FaCalendarDay />
+              {formattedDate(blog?.createdBy?.createdAt)}
             </span>
             <span className="post-comment">
-              <a href="http://jobcareer.chimpgroup.com/jobdoor/experience-writing-for-producing-a-newscast/#comments">
-                <i className="cs-color icon-chat6"></i>
-                {/* <div className="flex flex-row h-2"> */}
-                <p className="">
-                  {" "}
-                  <BiCommentDots aria-hidden="true" size={20} />
-                  {blog?.comments?.length}
-                </p>
+              <p className="">
+                {" "}
+                <BiCommentDots aria-hidden="true" size={20} />
+                {blog?.comments?.length}
+              </p>
 
-                {/* </div> */}
-              </a>
+              {/* </div> */}
             </span>
           </div>
         </div>

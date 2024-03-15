@@ -110,15 +110,16 @@ export const getUserByUsername = async (username, token) => {
 };
 
 // follow user
-export const followUser = async (userId, token) => {
+export const followUser = async (username, token) => {
   const toastId = toast.loading("Loading...");
   let success = false;
   let result = null;
+  console.log("iinside follow user");
   try {
     const response = await apiConnector(
       "PUT",
       Follow_USER_API,
-      { userId },
+      { username },
       {
         Authorization: `Bearer ${token}`,
       }
@@ -132,7 +133,7 @@ export const followUser = async (userId, token) => {
 
     toast.success(response.data.message);
     success = true;
-    result = response?.data;
+    result = response;
   } catch (error) {
     success = false;
     console.log("Follow User API ERROR............", error);
@@ -144,7 +145,7 @@ export const followUser = async (userId, token) => {
 };
 
 //unfollow user
-export const unfollowUser = async (userId, token) => {
+export const unfollowUser = async (username, token) => {
   const toastId = toast.loading("Loading...");
   let success = false;
   let result = null;
@@ -152,7 +153,7 @@ export const unfollowUser = async (userId, token) => {
     const response = await apiConnector(
       "PUT",
       UNFOLLOW_USER_API,
-      { userId },
+      { username },
       {
         Authorization: `Bearer ${token}`,
       }
@@ -166,7 +167,7 @@ export const unfollowUser = async (userId, token) => {
 
     toast.success(response.data.message);
     success = true;
-    result = response?.data;
+    result = response;
   } catch (error) {
     success = false;
     console.log("Unfollow User API ERROR............", error);
