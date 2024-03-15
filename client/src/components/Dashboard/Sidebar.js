@@ -7,6 +7,7 @@ import { sidebarLinks } from "./DashboardLinks";
 // import { logout } from "../../services/operations/authAPI";
 import ConfirmationModal from "../common/ConfirmationModal";
 import SidebarLink from "./SidebarLink";
+import { logout } from "../../services/operations/authAPI";
 
 export default function Sidebar() {
   //   const { user, loading: profileLoading } = useSelector(
@@ -52,7 +53,7 @@ export default function Sidebar() {
                 text2: "You will be logged out of your account.",
                 btn1Text: "Logout",
                 btn2Text: "Cancel",
-                // btn1Handler: () => dispatch(logout(navigate)),
+                btn1Handler: () => dispatch(logout(navigate)),
                 btn2Handler: () => setConfirmationModal(null),
               })
             }

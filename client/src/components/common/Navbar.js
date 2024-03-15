@@ -21,16 +21,30 @@ function Navbar() {
               Home
             </button>
           </Link>
-          <Link to="/login">
-            <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
-              Login
-            </button>
-          </Link>
-          <Link to="/register">
-            <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
-              Sign Up
-            </button>
-          </Link>
+          {token !== null && (
+            <Link to="/dashboard/my-profile" className="relative">
+              {
+                <button className="text-white px-4 py-2  rounded-md bg-slate-600  hover:text-blue-500">
+                  Dashboard
+                </button>
+              }
+            </Link>
+          )}
+          {token === null && (
+            <Link to="/login">
+              <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
+                Login
+              </button>
+            </Link>
+          )}
+          {token === null && (
+            <Link to="/signup">
+              <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
+                Sign Up
+              </button>
+            </Link>
+          )}
+          {/* <Link to="/register"></Link> */}
           <Link to="/aboutUs">
             <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500">
               About Us
@@ -39,6 +53,11 @@ function Navbar() {
           <Link to="/ContactUs">
             <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500 ">
               Contact Us
+            </button>
+          </Link>
+          <Link to="/blogs">
+            <button className="text-white px-4 py-2 rounded-md bg-slate-600  hover:text-blue-500 ">
+              Blogs
             </button>
           </Link>
         </div>

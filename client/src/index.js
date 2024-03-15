@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { configureStore } from "@reduxjs/toolkit";
 import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 //configure store
 const store = configureStore({
@@ -17,6 +18,7 @@ root.render(
     <BrowserRouter>
       {/* <React.StrictMode> */}
       <App />
+      <Toaster />
       {/* </React.StrictMode> */}
     </BrowserRouter>
   </Provider>
