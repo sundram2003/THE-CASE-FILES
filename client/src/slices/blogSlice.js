@@ -21,6 +21,7 @@ const blogSlice = createSlice({
     setBlogs(state, action) {
       state.blogs = action.payload;
     },
+
     setPrevCategory(state, action) {
       state.previousCategory = action.payload;
     },

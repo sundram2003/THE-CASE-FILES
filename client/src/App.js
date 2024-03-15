@@ -21,6 +21,7 @@ import IndividualBlog from "./pages/IndividualBlogs";
 import EditBlog from "./pages/EditBlog";
 import ContactUs from "./pages/ContactUs";
 import UserProfile from "./pages/UserProfile";
+import Blogs from "./pages/Blogs";
 function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col font-inter">
@@ -33,6 +34,7 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />}></Route>
         <Route path="/aboutUs" element={<AboutUs />}></Route>
         <Route path="/contactUs" element={<ContactUs />}></Route>
+        <Route path="/blogs" element={<Blogs />} />
 
         <Route
           element={

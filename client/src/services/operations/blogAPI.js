@@ -10,6 +10,8 @@ const {
   UPVOTE_BLOG,
   UPDATE_BLOG_API,
   GET_ALL_MY_BLOGS_API,
+  GET_ALL_RECENT_BLOGS,
+  GET_ALL_UPVOTED_BLOGS,
 } = blogEndpoints;
 
 // create blog
@@ -197,4 +199,64 @@ export const updateBlog = async (
     console.log("UPDATE BLOG API ERROR............", error);
     throw error;
   }
+};
+
+export const fetchMostRecentBlogs = async (token) => {
+  const toastId = toast.loading("Loading...");
+  let result = [];
+
+  try {
+    const response = await apiConnector(
+      "GET",
+      GET_ALL_RECENT_BLOGS, // Replace with your API endpoint for fetching recent blogs
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Getting fetchMostRecentBlogs API", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Most Recent Blogs");
+    }
+
+    result = response?.data?.mostRecentBlogs;
+  } catch (error) {
+    console.log("GET_MOST_RECENT_BLOGS_API API ERROR............", error);
+    toast.error(error.message);
+  }
+
+  toast.dismiss(toastId);
+  return result;
+};
+
+export const fetchMostVotedBlogs = async (token) => {
+  const toastId = toast.loading("Loading...");
+  let result = [];
+
+  try {
+    const response = await apiConnector(
+      "GET",
+      GET_ALL_UPVOTED_BLOGS, // Replace with your API endpoint for fetching most voted blogs
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Getting fetchMostVotedBlogs API", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Most Voted Blogs");
+    }
+
+    result = response?.data?.mostVotedBlogs;
+  } catch (error) {
+    console.log("GET_MOST_VOTED_BLOGS_API API ERROR............", error);
+    toast.error(error.message);
+  }
+
+  toast.dismiss(toastId);
+  return result;
 };

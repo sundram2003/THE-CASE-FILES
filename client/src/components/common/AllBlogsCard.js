@@ -8,6 +8,8 @@ import {
   BiCommentDots,
   BiUserCircle,
 } from "react-icons/bi";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 import { FaHeart, FaThumbsDown, FaThumbsUp } from "react-icons/fa";
 const BlogCard = ({
   id,
@@ -29,6 +31,7 @@ const BlogCard = ({
 }) => {
   // console.log("id of that blog", id);
   const navigate = useNavigate();
+  const token = useSelector((state) => state.auth);
   const handleClick = () => {
     if (status === "Draft") {
       // If blog status is "Draft", prevent both reading more and editing
@@ -43,6 +46,16 @@ const BlogCard = ({
     } else {
       // Redirect to the individual blog page
       onReadMore();
+    }
+  };
+  const handleAuthorClick = () => {
+    if (token === null) {
+      // If user is authenticated, navigate to author's page
+      toast.success("Please login to read more");
+      return navigate("/login");
+    } else {
+      // If user is not authenticated, redirect to login page
+      return navigate(`/profile/${author}`);
     }
   };
   return (
@@ -68,9 +81,13 @@ const BlogCard = ({
             {/* <img src={} alt="Profile Image" /> */}
 
             <BiUserCircle size={20} />
-            <span className="font-semibold">
-              <a href={`/auth/getUserByUsername/${author}`}>{author}</a>
-            </span>
+
+            {/* <a href={`/auth/getUserByUsername/${author}`}>{author}</a> */}
+            {author && (
+              <span className="font-semibold" onClick={handleAuthorClick}>
+                {author}
+              </span>
+            )}
           </div>
           <div className="product-price   ">
             {/* <img src={} alt="Profile Image" /> */}

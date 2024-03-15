@@ -7,24 +7,11 @@ import IndividualBlog from "./IndividualBlogs";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
 
-const AllBlogs = () => {
-  const [blogs, setBlogs] = useState([]);
+const AllBlogs = ({ blogs }) => {
+  //   const [blogs, setBlogs] = useState([]);
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        const response = await getAllBlogs(null);
-        const data = response?.data;
-        setBlogs(data);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      }
-    };
-
-    fetchBlogs();
-  }, []);
-  console.log("blogs", blogs);
+  console.log("token inside blog page", token);
   const handleReadMore = (blogId) => {
     if (token === null) {
       toast.success("Please login to read more");
