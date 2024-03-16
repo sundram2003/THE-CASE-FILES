@@ -13,6 +13,8 @@ const {
   GET_ALL_RECENT_BLOGS,
   GET_ALL_CATEGORY_API,
   GET_ALL_UPVOTED_BLOGS,
+  ADD_COMMENTS_API,
+  GET_COMMENTS_BY_BLOG_ID,
 } = blogEndpoints;
 
 // create blog
@@ -273,6 +275,71 @@ export const fetchMostVotedBlogs = async (token) => {
   } catch (error) {
     console.log("GET_MOST_VOTED_BLOGS_API API ERROR............", error);
     toast.error(error.message);
+  }
+
+  toast.dismiss(toastId);
+  return result;
+};
+
+export const getCommentsByBlogId = async (id, token) => {
+  const toastId = toast.loading("Loading...");
+  let result = [];
+
+  try {
+    const response = await apiConnector(
+      "GET",
+      `${GET_COMMENTS_BY_BLOG_ID}/${id}`, // Replace with your API endpoint for fetching comments by blog ID
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Getting getCommentsByBlogId API", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Comments by Blog ID");
+    }
+
+    result = response?.data?.comments;
+  } catch (error) {
+    console.log("GET_COMMENTS_BY_BLOG_ID_API API ERROR............", error);
+    toast.error(error.message);
+  }
+
+  toast.dismiss(toastId);
+  return result;
+};
+
+//add comments
+export const addComments = async (blogId, comment, token) => {
+  const toastId = toast.loading("Loading...");
+  let success = false;
+  let result = null;
+  try {
+    const response = await apiConnector(
+      "POST",
+      `${ADD_COMMENTS_API}/${blogId}`,
+      { comment },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Add Comments API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Add Comments");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    result = response;
+  } catch (error) {
+    success = false;
+    console.log("Add Comments API ERROR............", error);
+    toast.error(error.message);
+    return success;
   }
 
   toast.dismiss(toastId);

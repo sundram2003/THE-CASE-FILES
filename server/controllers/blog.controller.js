@@ -5,7 +5,6 @@ import { Category } from "../models/category.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comments.model.js";
 
-
 export const createBlog = async (req, res) => {
   try {
     /*
@@ -213,7 +212,7 @@ export const searchBlog = async (req, res) => {
       .toLowerCase()
       .replace(/[^a-zA-Z0-9-]/g, "");
     // 2. get blog by slug
-    const blogs = await Blog.find({ $text: { $search: slug } })
+    const blogs = await Blog.find({ $text: { $search: slug } });
     // 3. return response
     return res.status(200).json({
       success: true,
@@ -577,9 +576,9 @@ export const addComment = async (req, res) => {
     5. Emit a Socket.IO event to notify clients
     6. Return response
     */
-
+    const { blogId } = req.params;
     // 1. Extract necessary data from the request
-    const { blogId, content } = req.body;
+    const { content } = req.body;
     const userId = req.user.id;
 
     // 2. Validate the data
@@ -601,16 +600,15 @@ export const addComment = async (req, res) => {
     await newComment.save();
 
     // 4. Add the comment to the corresponding blog
-    const blog = await Blog.findById(blogId);
+    const blog = await Blog.findByIdAndUpdate(blogId, {
+      $push: { comments: newComment._id },
+    });
     if (!blog) {
       return res.status(404).json({
         success: false,
         message: "Blog not found.",
       });
     }
-
-    blog.comments.push(newComment._id);
-    await blog.save();
 
     // 5. Emit a Socket.IO event to notify clients
     // io.emit('newComment', newComment); // Emitting 'newComment' event with the new comment data

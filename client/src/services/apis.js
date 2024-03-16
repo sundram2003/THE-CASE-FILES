@@ -25,10 +25,12 @@ export const blogEndpoints = {
   UPVOTE_BLOG: BASE_URL + "/blog/upvote",
   DOWNVOTE_BLOG: BASE_URL + "/blog/downvote",
   GET_BLOG_COMMENTS: BASE_URL + "/blog/getBlogComments",
-  ADD_BLOG_COMMENT: BASE_URL + "/blog/addBlogComment",
+  // ADD_BLOG_COMMENT: BASE_URL + "/blog/addBlogComment",
   GET_ALL_UPVOTED_BLOGS: BASE_URL + "/blog/getBlogsByUpvote",
   GET_ALL_RECENT_BLOGS: BASE_URL + "/blog/getAllRecentBlogs",
   DELETE_BLOG: BASE_URL + "/blog/deleteBlog",
   UPDATE_BLOG_API: BASE_URL + "/blog/update",
   GET_ALL_CATEGORY_API: BASE_URL + "/category/getAllCategories",
+  GET_COMMENTS_BY_BLOG_ID: BASE_URL + "/blog/getCommentsByBlogId",
+  ADD_COMMENTS_API: BASE_URL + "/auth/addComment",
 };
