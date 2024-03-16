@@ -10,7 +10,8 @@ import {
   getBlogsByUpvotes,
   getMyBlogs,
   updateBlog,
-  upvoteBlog
+  upvoteBlog,
+  addComment,
 } from '../controllers/blog.controller.js';
 import { auth } from '../middlewares/auth.js'
 const router = express.Router();
@@ -27,6 +28,6 @@ router.put('/downvote', auth, downvoteBlog);
 router.delete('/delete', auth, deleteBlog);
 router.put('/update/:blogId', auth, updateBlog);
 router.get('/getBlogsByUpvote', getBlogsByUpvotes);
-
+router.get('/addComment',auth,addComment);
 
 export default router;

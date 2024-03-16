@@ -3,6 +3,9 @@ import { Blog } from "../models/blogs.model.js";
 import { uploadImageToCloudinary } from "../utils/imageUploader.js";
 import { Category } from "../models/category.model.js";
 import { User } from "../models/user.model.js";
+import { Comment } from "../models/comments.model.js";
+
+
 export const createBlog = async (req, res) => {
   try {
     /*
@@ -592,6 +595,69 @@ export const getBlogById = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error in fetching the blog",
+      errorMessage: error.message,
+    });
+  }
+};
+export const addComment = async (req, res) => {
+  try {
+    /*
+    1. Extract necessary data from the request
+    2. Validate the data
+    3. Create a new comment
+    4. Add the comment to the corresponding blog
+    5. Emit a Socket.IO event to notify clients
+    6. Return response
+    */
+
+    // 1. Extract necessary data from the request
+    const { blogId, content } = req.body;
+    const userId = req.user.id;
+
+    // 2. Validate the data
+    if (!blogId || !content) {
+      return res.status(400).json({
+        success: false,
+        message: "Blog ID and content are required for adding a comment.",
+      });
+    }
+
+    // 3. Create a new comment
+    const newComment = new Comment({
+      content,
+      createdBy: userId,
+      blogId,
+    });
+
+    // Save the comment to the database
+    await newComment.save();
+
+    // 4. Add the comment to the corresponding blog
+    const blog = await Blog.findById(blogId);
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found.",
+      });
+    }
+
+    blog.comments.push(newComment._id);
+    await blog.save();
+
+    // 5. Emit a Socket.IO event to notify clients
+    // io.emit('newComment', newComment); // Emitting 'newComment' event with the new comment data
+
+    // 6. Return response
+    return res.status(201).json({
+      success: true,
+      message: "Comment added successfully.",
+      data: newComment,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in adding the comment.",
       errorMessage: error.message,
     });
   }
