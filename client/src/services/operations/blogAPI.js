@@ -11,6 +11,7 @@ const {
   UPDATE_BLOG_API,
   GET_ALL_MY_BLOGS_API,
   GET_ALL_RECENT_BLOGS,
+  GET_ALL_CATEGORY_API,
   GET_ALL_UPVOTED_BLOGS,
 } = blogEndpoints;
 
@@ -25,7 +26,7 @@ export const createBlog = async (data, token) => {
     console.log("response in create blog", response);
     const blogData = response;
     console.log("blogData", blogData);
-    toast.success(blogData.data.message);
+    if (response) toast.success(blogData.data.message);
     if (!blogData?.data?.success) {
       throw new Error("Could Not Create Blog");
     }
@@ -37,6 +38,22 @@ export const createBlog = async (data, token) => {
   }
 };
 
+// get all category
+export const getAllCategory = async () => {
+  try {
+    const response = await apiConnector("GET", GET_ALL_CATEGORY_API, null, {
+      //   Authorization: `Bearer ${token}`,
+    });
+    console.log("GET ALL CATEGORY API RESPONSE............", response);
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch All Category");
+    }
+    return response?.data;
+  } catch (error) {
+    console.log("GET ALL CATEGORY API ERROR............", error);
+    throw error;
+  }
+};
 // get all blogs
 export const getAllBlogs = async () => {
   try {

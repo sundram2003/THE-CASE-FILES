@@ -101,7 +101,7 @@ export const getUserByUsername = async (username, token) => {
       throw new Error("Could Not Fetch User by Username");
     }
 
-    const user = response?.data?.user;
+    const user = response?.data;
     return user;
   } catch (error) {
     console.error("Error fetching user by username:", error);

@@ -26,8 +26,9 @@ function UserProfile() {
     const fetchUserDetails = async () => {
       try {
         const response = await getUserByUsername(username, token);
-        setUser(response);
-        setIsFollowing(response.followers.includes(user.username));
+        console.log("response in fetchuser", response);
+        setUser(response.user);
+        setIsFollowing(response?.followers?.includes(user.username));
         setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.log("error in fetching user details", error);
