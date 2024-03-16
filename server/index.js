@@ -8,6 +8,8 @@ import userRoutes from './routes/user.routes.js';
 import blogRoutes from './routes/blog.routes.js';
 import categoryRoutes from './routes/category.routes.js';
 import cors from 'cors';
+import http from 'http';
+import {Server} from 'socket.io'
 dotenv.config({
   path: '.env'
 });
@@ -16,7 +18,9 @@ dotenv.config({
 connectDB();
 cloudinaryConnect();
 const app = express();
-
+// adding socket io configuration
+const server = http.createServer(app);
+const io = new Server(server)
 //middleware
 app.use(cors());
 app.use(cookieParser());
@@ -30,6 +34,23 @@ app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/blog', blogRoutes);
 app.use('/api/v1/category', categoryRoutes);
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
+
+io.on('connection', (socket) => {
+  console.log('A user connected',socket.id);
+
+  // Handle real-time events here
+  socket.on('comment', (msg) => {
+    console.log("new comment recieved",msg);
+  })
+  //   // Broadcast the comment to all connected clients
+  //   io.emit('newComment', data);
+  // });
+
+  // Handle disconnection
+  // socket.on('disconnect', () => {
+  //   console.log('User disconnected');
+  // });
+});
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
