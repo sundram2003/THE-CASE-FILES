@@ -22,6 +22,7 @@ import EditBlog from "./pages/EditBlog";
 import ContactUs from "./pages/ContactUs";
 import UserProfile from "./pages/UserProfile";
 import Blogs from "./pages/Blogs";
+import SearchBlogs from "./components/common/SearchBlogs";
 function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col font-inter">
@@ -35,7 +36,7 @@ function App() {
         <Route path="/aboutUs" element={<AboutUs />}></Route>
         <Route path="/contactUs" element={<ContactUs />}></Route>
         <Route path="/blogs" element={<Blogs />} />
-
+        <Route path="/blog/getBlogsByTitle/:title" element={<SearchBlogs />} />
         <Route
           element={
             // <PrivateRoute>

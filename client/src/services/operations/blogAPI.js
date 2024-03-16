@@ -15,6 +15,7 @@ const {
   GET_ALL_UPVOTED_BLOGS,
   ADD_COMMENTS_API,
   GET_COMMENTS_BY_BLOG_ID,
+  SEARCH_BLOG_API,
 } = blogEndpoints;
 
 // create blog
@@ -340,6 +341,36 @@ export const addComments = async (blogId, comment, token) => {
     console.log("Add Comments API ERROR............", error);
     toast.error(error.message);
     return success;
+  }
+
+  toast.dismiss(toastId);
+  return result;
+};
+
+export const getBlogbyTitle = async (title, token) => {
+  const toastId = toast.loading("Loading...");
+  let result = [];
+
+  try {
+    const response = await apiConnector(
+      "GET",
+      `${SEARCH_BLOG_API}/${title}`, // Replace with your API endpoint for fetching most voted blogs
+      null,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Getting getBlogbyTitle API", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch Blog by Title");
+    }
+
+    result = response?.data;
+  } catch (error) {
+    console.log("GET_BLOG_BY_TITLE_API API ERROR............", error);
+    toast.error(error.message);
   }
 
   toast.dismiss(toastId);
