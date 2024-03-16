@@ -33,4 +33,5 @@ export const blogEndpoints = {
   GET_ALL_CATEGORY_API: BASE_URL + "/category/getAllCategories",
   GET_COMMENTS_BY_BLOG_ID: BASE_URL + "/blog/getCommentsByBlogId",
   ADD_COMMENTS_API: BASE_URL + "/auth/addComment",
+  SEARCH_BLOG_API: BASE_URL + "/blog/getBlogsByTitle",
 };
