@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlog } from "../slices/blogSlice";
@@ -7,7 +7,7 @@ import { MdNavigateNext } from "react-icons/md";
 import JoditEditor from "jodit-react";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
-import { createBlog } from "../services/operations/blogAPI";
+import { createBlog, getAllCategory } from "../services/operations/blogAPI";
 const CreateBlog = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
@@ -22,6 +22,21 @@ const CreateBlog = () => {
   const { token } = useSelector((state) => state.auth);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    //get all category
+    const fetchAllCategory = async () => {
+      console.log("get all category");
+      try {
+        const response = await getAllCategory(null);
+        console.log("response", response);
+        setCategories(response.categories);
+      } catch (error) {
+        console.error("Error fetching all categories:", error);
+      }
+    };
+    fetchAllCategory();
+  }, []);
 
   const onSubmit = async (blogData) => {
     const formData = new FormData();
@@ -43,6 +58,7 @@ const CreateBlog = () => {
     }
     setLoading(false);
   };
+  console.log("categoriesss", categories);
 
   return (
     <form
@@ -115,35 +131,30 @@ const CreateBlog = () => {
         <label className="text-sm text-richblack-5" htmlFor="category">
           Category<sup className="text-red-900">*</sup>
         </label>
-        <input
+        <select
+          id="category"
+          {...register("category", { required: true })}
+          className="form-style w-full"
+        >
+          {categories.map((category) => (
+            <option key={category._id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+        {/* <input
           id="category"
           placeholder="Enter Category"
           {...register("category", { required: true })}
           className="form-style w-full"
-        />
+        /> */}
         {errors.category && (
           <span className="ml-2 text-xs tracking-wide text-red-900">
             Category is required**
           </span>
         )}
       </div>
-      {/* 
-      <div className="flex flex-col space-y-2">
-        <label className="text-sm text-richblack-5" htmlFor="tags">
-          Tags<sup className="text-red-900">*</sup>
-        </label>
-        <input
-          id="tags"
-          placeholder="Enter Tags (comma-separated)"
-          {...register("tags", { required: true })}
-          className="form-style w-full"
-        />
-        {errors.tags && (
-          <span className="ml-2 text-xs tracking-wide text-red-900">
-            Tags are required**
-          </span>
-        )}
-      </div> */}
+
       <div className="flex flex-col space-y-2">
         <label className="text-sm text-richblack-5" htmlFor="tags">
           Tags<sup className="text-red-900">*</sup>

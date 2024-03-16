@@ -11,14 +11,24 @@ import {
   getSingleBlog,
   dislikeBlog,
   likeBlog,
+  getCommentsByBlogId,
+  addComments,
 } from "../services/operations/blogAPI";
 import { BiCommentDots, BiDislike, BiLike } from "react-icons/bi";
 import { FaCalendarDay } from "react-icons/fa";
+import toast from "react-hot-toast";
+import { io } from "socket.io-client";
+const socket = io("/", {
+  reconnection: true,
+});
 
 const IndividualBlog = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const { token } = useSelector((state) => state.auth);
+  const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
+  const [commentsRealTime, setCommentsRealTime] = useState([]);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -32,6 +42,13 @@ const IndividualBlog = () => {
 
     fetchBlog();
   }, [id, token]);
+
+  useEffect(() => {
+    // console.log('SOCKET IO', socket);
+    socket.on("new-comment", (newComment) => {
+      setCommentsRealTime(newComment);
+    });
+  }, []);
   console.log("blog", blog);
   if (!blog) {
     return <div>Loading...</div>; // Render loading indicator while blog is being fetched
@@ -71,37 +88,24 @@ const IndividualBlog = () => {
   //   setShowComments(!showComments);
   // };
 
-  // const handleGetComments = async () => {
-  //   try {
-  //     setIsLoadingComments(true);
-  //     const response = await getCommentsByBlogId(id, token); // Assuming there's a function to fetch comments by blog ID
-  //     if (response) {
-  //       setComments(response);
-  //     } else {
-  //       console.error("Error fetching comments");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching comments:", error);
-  //   } finally {
-  //     setIsLoadingComments(false);
-  //   }
-  // };
-
-  // const handleAddComment = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await addCommentToBlog(id, comment, token); // Assuming there's a function to add a comment to a blog
-  //     if (response) {
-  //       // Update the local state or fetch the updated blog again
-  //       setComment(""); // Clear the comment input
-  //     } else {
-  //       console.error("Error adding comment");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error adding comment:", error);
-  //   }
-  // };
-
+  const handleAddComment = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await addComments(id, comment, token); // Assuming there's a function to add a comment to a blog
+      if (response) {
+        // Update the local state or fetch the updated blog again
+        setComment(""); // Clear the comment input
+        toast.success("comments added");
+        socket.emit("comment", response.blogs.comments);
+      } else {
+        console.error("Error adding comment");
+      }
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    }
+  };
+  let uiCommentUpdate =
+    commentsRealTime.length > 0 ? commentsRealTime : comments;
   return (
     <div className="container">
       <div className="cs-blog-detail">
@@ -213,6 +217,34 @@ const IndividualBlog = () => {
             ))}
           </div>
         </div>
+        <div className="comment-section">
+          <h3>Add a Comment</h3>
+          <form onSubmit={handleAddComment}>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="Add your comment here..."
+            ></textarea>
+            <button type="submit">Add Comment</button>
+          </form>
+        </div>
+
+        {blog?.comments && (
+          <div className="comments">
+            <h3>Comments</h3>
+            {uiCommentUpdate.map((comment) => (
+              <div key={comment._id} className="comment">
+                <p>{comment.text}</p>
+                <p className="comment-author">
+                  By {comment.author.firstName} {comment.author.lastName} on{" "}
+                  {formattedDate(comment.createdAt)}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* adding comments */}
       </div>
     </div>
   );

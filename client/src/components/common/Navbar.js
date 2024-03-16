@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/Removebg new.png";
 import { useSelector } from "react-redux";
+import SearchComponent from "./Search";
 
 function Navbar() {
   const { token } = useSelector((state) => state.auth);
@@ -64,14 +65,7 @@ function Navbar() {
 
         {/* Search Bar */}
         <div>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-2 py-1 rounded-lg border-none focus:outline-none"
-          />
-          <button className="bg-blue-500 text-white px-2 py-1 rounded-lg ml-2">
-            Search
-          </button>
+          <SearchComponent />
         </div>
       </nav>
     </div>
