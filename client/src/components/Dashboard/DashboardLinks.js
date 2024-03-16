@@ -1,5 +1,6 @@
 import { ACCOUNT_TYPE } from "../../utils/constant";
 import React from "react";
+
 export const sidebarLinks = [
   {
     id: 1,
@@ -24,12 +25,6 @@ export const sidebarLinks = [
     name: "Earnings",
     path: "/dashboard/earnings",
     icon: "VscCreditCard",
-  },
-  {
-    id: 5,
-    name: "Analytics",
-    path: "/dashboard/analytics",
-    icon: "VscFile",
   },
   {
     id: 6,
