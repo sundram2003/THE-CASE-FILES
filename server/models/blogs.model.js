@@ -46,8 +46,11 @@ const blogSchema = new mongoose.Schema({
   slug: {
     type: String,
     required: true,
+    text: true,
     index: true,
   }
 }, { timestamps: true });
+
+blogSchema.index({ slug: "text" });
 
 export const Blog = mongoose.model("Blog", blogSchema);

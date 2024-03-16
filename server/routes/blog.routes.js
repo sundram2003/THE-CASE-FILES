@@ -9,6 +9,7 @@ import {
   getBlogsByTag,
   getBlogsByUpvotes,
   getMyBlogs,
+  searchBlog,
   updateBlog,
   upvoteBlog
 } from '../controllers/blog.controller.js';
@@ -22,6 +23,7 @@ router.get('/getallblogs', getAllBlogs);
 router.get('/getmyBlogs', auth, getMyBlogs);
 router.get('/getBlogByCategory/:category', getBlogsByCategory);
 router.get('/getBlogsByTags/:tags', getBlogsByTag);
+router.get('/getBlogsByTitle/:title', searchBlog);
 router.put('/upvote', auth, upvoteBlog);
 router.put('/downvote', auth, downvoteBlog);
 router.delete('/delete', auth, deleteBlog);

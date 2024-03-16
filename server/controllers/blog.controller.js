@@ -193,7 +193,7 @@ export const getMyBlogs = async (req, res) => {
     });
   }
 };
-export const getBlog = async (req, res) => {
+export const searchBlog = async (req, res) => {
   try {
     /*
     1. get slug from request params
@@ -201,53 +201,21 @@ export const getBlog = async (req, res) => {
     3. return response
     */
     // 1. get slug from request params
-    const { slug } = req.params;
+    const { title } = req.params;
+    //create a slog from title
+    let slug;
+    slug = title
+      .split(" ")
+      .join("-")
+      .toLowerCase()
+      .replace(/[^a-zA-Z0-9-]/g, "");
     // 2. get blog by slug
-    const blogs = await Blog.aggregate([
-      // Match only published blogs
-      { $match: { slug: slug } },
-
-      // Lookup for User document to populate createdBy field
-      {
-        $lookup: {
-          from: "users", // Assuming the collection name for User is "users"
-          localField: "createdBy",
-          foreignField: "_id",
-          as: "createdBy",
-        },
-      },
-
-      // Unwind createdBy array created by $lookup
-      { $unwind: "$createdBy" },
-
-      // Lookup for Comment documents to populate comments field
-      {
-        $lookup: {
-          from: "comments", // Assuming the collection name for Comment is "comments"
-          localField: "comments",
-          foreignField: "_id",
-          as: "comments",
-        },
-      },
-
-      // Lookup for Category documents to populate category field
-      {
-        $lookup: {
-          from: "categories", // Assuming the collection name for Category is "categories"
-          localField: "category",
-          foreignField: "_id",
-          as: "category",
-        },
-      },
-
-      // Unwind category array created by $lookup
-      { $unwind: "$category" },
-    ]);
+    const blogs = await Blog.find({ $text: { $search: slug } })
     // 3. return response
     return res.status(200).json({
       success: true,
       message: "Blog fetched successfully",
-      data: blog,
+      data: blogs,
     });
   } catch (error) {
     console.log(error);

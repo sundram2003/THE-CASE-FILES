@@ -383,12 +383,12 @@ const Login = () => {
                         <FaEnvelope className="text-lg me-3" />
                         <div className="form-outline flex-grow w-full">
                           <input
-                            type="email"
+                            type="text"
                             name="email"
                             value={email}
                             onChange={handleOnChange}
                             className="form-control px-3 py-2 rounded-3xl border-2 border-black w-full"
-                            placeholder="Your Email"
+                            placeholder="Email or Username"
                           />
                         </div>
                       </div>
