@@ -63,7 +63,7 @@ const SignUp = () => {
           <div className="col-lg-12 col-xl-11">
             <div className="card text-black rounded-2xl">
               <div className="card-body p-md-5">
-                <div className="flex flex-row gap-2 justify-center">
+                <div className="flex flex-row gap-2 justify-center h-full">
                   <div className="flex flex-col order-2 order-lg-1 lg:w-2/3">
                     <p className="text-center text-3xl font-bold mb-5">
                       Sign up
@@ -172,10 +172,10 @@ const SignUp = () => {
                     </form>
                     {/* </form> */}
                   </div>
-                  <div className=" d-flex  order-5 order-lg-2">
+                  <div className=" d-flex  order-1 order-lg-2">
                     <img
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                      className="img-fluid"
+                      src="https://img.freepik.com/premium-vector/detective-character-investigation_884500-15711.jpg"
+                      className="img-fluid h-full w-auto lg:h-auto lg:w-full"
                       alt="Sample image"
                     />
                   </div>
