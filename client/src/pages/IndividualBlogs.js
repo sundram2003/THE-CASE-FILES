@@ -29,12 +29,15 @@ const IndividualBlog = () => {
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
   const [commentsRealTime, setCommentsRealTime] = useState([]);
-
+  const [blogComment, setBlogComment] = useState([]);
+  const [showComments, setShowComments] = useState(false);
   useEffect(() => {
     const fetchBlog = async () => {
       try {
         const response = await getSingleBlog(id, token);
         setBlog(response.data);
+        setBlogComment(response?.data?.comments);
+        setShowComments(true);
       } catch (error) {
         console.error("Error fetching blog:", error);
       }
@@ -44,12 +47,14 @@ const IndividualBlog = () => {
   }, [id, token]);
 
   useEffect(() => {
-    // console.log('SOCKET IO', socket);
+    console.log("SOCKET IO", socket);
     socket.on("new-comment", (newComment) => {
+      console.log("newcomment", newComment);
       setCommentsRealTime(newComment);
     });
   }, []);
   console.log("blog", blog);
+
   if (!blog) {
     return <div>Loading...</div>; // Render loading indicator while blog is being fetched
   }
@@ -73,6 +78,7 @@ const IndividualBlog = () => {
       // Refresh the blog data after downvoting
       const response = await getSingleBlog(id, token);
       setBlog(response.data);
+      // setShowComments(false);
       console.log("blog disliked");
     } catch (error) {
       console.error("Error downvoting blog:", error);
@@ -99,9 +105,11 @@ const IndividualBlog = () => {
         // Update the local state or fetch the updated blog again
         setComment(""); // Clear the comment input
         console.log("response in add comment", response);
-        setComments(response?.data?.data?.content);
+        setComments(response?.data?.data?.comments);
+        setShowComments(false);
+        console.log("setComments comment", comments);
         toast.success("comments added");
-        socket.emit("comment", response?.data?.data?.content);
+        socket.emit("comment", response?.data?.data?.comments);
       } else {
         console.error("Error adding comment");
       }
@@ -109,9 +117,11 @@ const IndividualBlog = () => {
       console.error("Error adding comment:", error);
     }
   };
-  let uiCommentUpdate =
-    commentsRealTime.length > 0 ? commentsRealTime : comments;
-  console.log("comments in individual blog", comments);
+
+  // let uiCommentUpdate =
+  //   commentsRealTime.length > 0 ? commentsRealTime : comments;
+  // console.log("comments in individual blog", commentsRealTime);
+  console.log("comment without real time", blogComment);
   return (
     <div className="container">
       <div className="cs-blog-detail">
@@ -213,16 +223,31 @@ const IndividualBlog = () => {
             <button type="submit">Add Comment</button>
           </form>
         </div>
-
-        {blog?.comments && (
-          <div className="comments bg-slate-500 p-4">
+        {!showComments && blog?.comments && (
+          <div className="comments p-4">
             <h3>Comments</h3>
-            {uiCommentUpdate.map((comment) => (
+            {comments.map((comment) => (
               <div key={comment._id} className="comment">
-                <p>{comment.text}</p>
+                <p>{comment.content}</p>
                 <p className="comment-author">
-                  By {comment.author.firstName} {comment.author.lastName} on{" "}
-                  {formattedDate(comment.createdAt)}
+                  By {comment?.createdBy?.firstName}{" "}
+                  {comment?.createdBy?.lastName} on{" "}
+                  {formattedDate(comment?.createdAt)}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+        {showComments && (
+          <div className="comments  p-4">
+            <h3>Comments</h3>
+            {blogComment.map((comment) => (
+              <div key={comment._id} className="comment">
+                <p>{comment.content}</p>
+                <p className="comment-author">
+                  By {comment?.createdBy?.firstName}{" "}
+                  {comment?.createdBy?.lastName} on{" "}
+                  {formattedDate(comment?.createdAt)}
                 </p>
               </div>
             ))}

@@ -600,9 +600,13 @@ export const addComment = async (req, res) => {
     await newComment.save();
 
     // 4. Add the comment to the corresponding blog
-    const blog = await Blog.findByIdAndUpdate(blogId, {
-      $push: { comments: newComment._id },
-    }, { new: true }).populate({
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $push: { comments: newComment._id },
+      },
+      { new: true }
+    ).populate({
       path: "comments",
       populate: {
         path: "createdBy",
@@ -626,6 +630,7 @@ export const addComment = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Comment added successfully.",
+      data: blog,
       data: blog,
     });
   } catch (error) {

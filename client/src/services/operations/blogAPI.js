@@ -335,7 +335,7 @@ export const addComments = async (blogId, content, token) => {
 
     toast.success(response.data.message);
     success = true;
-    result = response;
+    return (result = response);
   } catch (error) {
     success = false;
     console.log("Add Comments API ERROR............", error);
