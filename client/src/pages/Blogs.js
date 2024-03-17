@@ -69,7 +69,7 @@ export default function Blogs() {
   console.log("blogs", blogs);
   return (
     <div>
-      <div className="mb-14 flex items-center justify-between">
+      <div className="mb-12 flex items-center justify-between">
         <select
           value={filterType}
           onChange={(e) => setFilterType(e.target.value)}
