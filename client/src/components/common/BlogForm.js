@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useRef, useState } from "react";
+import JoditEditor from "jodit-react";
 const BlogForm = ({
   handleSubmit,
   register,
@@ -8,8 +9,11 @@ const BlogForm = ({
   statusOptions,
   submitText,
   onSubmit,
+  content,
+  setContent,
 }) => {
   const navigate = useNavigate();
+  const editor = useRef(null);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -38,12 +42,22 @@ const BlogForm = ({
             <label htmlFor="content" className="lable-style">
               Content
             </label>
-            <textarea
+            {/* <textarea
               name="content"
               id="content"
               placeholder="Enter Blog Content"
               className="form-style"
               {...register("content", { required: true })}
+            /> */}
+            <div dangerouslySetInnerHTML={{ __html: content }}></div>
+            <JoditEditor
+              ref={editor}
+              value={content}
+              // config={config}
+              tabIndex={1} // tabIndex of textarea
+              onBlur={(newContent) => {}} // preferred to use only this option to update the content for performance reasons
+              onChange={(newContent) => setContent(newContent)}
+              name="content"
             />
             {errors.content && (
               <span className="-mt-1 text-[12px] text-red-900">

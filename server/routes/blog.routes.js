@@ -29,6 +29,6 @@ router.put("/downvote", auth, downvoteBlog);
 router.delete("/delete", auth, deleteBlog);
 router.put("/update/:blogId", auth, updateBlog);
 router.get("/getBlogsByUpvote", getBlogsByUpvotes);
-router.put("/:blogId/addComment", auth, addComment);
-
+router.put("/addComment/:blogId", auth, addComment);
+//https:localhost:4000/api/v1/blog/addComment/124dfnqr23r2
 export default router;

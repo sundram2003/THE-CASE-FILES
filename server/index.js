@@ -37,7 +37,7 @@ app.use("/api/v1/category", categoryRoutes);
 const PORT = process.env.PORT || 8000;
 
 io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
+  console.log("A user connected", socket);
 
   // Handle real-time events here
   socket.on("comment", (msg) => {

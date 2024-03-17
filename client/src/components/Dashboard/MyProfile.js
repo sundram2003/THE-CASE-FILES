@@ -76,10 +76,6 @@ export default function MyProfile() {
 
   console.log("user", user);
   console.log("userDetails", userDetails);
-  if (loading) {
-    // Return a loading indicator until user details are fetched
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="">

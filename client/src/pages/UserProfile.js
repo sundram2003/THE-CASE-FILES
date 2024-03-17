@@ -15,7 +15,7 @@ import {
   FaUserPlus,
   FaUserMinus,
 } from "react-icons/fa";
-
+import { ACCOUNT_TYPE } from "../utils/constant";
 function UserProfile() {
   const { username } = useParams();
   const { token } = useSelector((state) => state.auth);
@@ -67,7 +67,7 @@ function UserProfile() {
   if (loading) {
     return <div>Loading...</div>; // Render a loading indicator while data is being fetched
   }
-
+  console.log("user inside userprofile", user);
   return (
     <div>
       <div>
@@ -98,7 +98,22 @@ function UserProfile() {
                 </button>
               )}
               <FaUserPlus aria-hidden="true" />
+              {user?.role === ACCOUNT_TYPE.ADMIN && (
+                <div>
+                  {/* Button for moderator */}
+                  <button
+                    onClick={(addmoderator) => {
+                      // Action for adding moderator
+                      console.log("Add Moderator Action");
+                    }}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Add Moderator
+                  </button>
+                </div>
+              )}
             </div>
+
             <div className="profile-stats">
               <ul>
                 <li>

@@ -313,15 +313,15 @@ export const getCommentsByBlogId = async (id, token) => {
 };
 
 //add comments
-export const addComments = async (blogId, comment, token) => {
+export const addComments = async (blogId, content, token) => {
   const toastId = toast.loading("Loading...");
   let success = false;
   let result = null;
   try {
     const response = await apiConnector(
-      "POST",
+      "PUT",
       `${ADD_COMMENTS_API}/${blogId}`,
-      { comment },
+      { content },
       {
         Authorization: `Bearer ${token}`,
       }

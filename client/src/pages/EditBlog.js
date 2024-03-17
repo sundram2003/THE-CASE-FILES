@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { updateBlog, getSingleBlog } from "../services/operations/blogAPI";
 import BlogForm from "../components/common/BlogForm";
 import { useNavigate, useParams } from "react-router-dom";
-
+import { htmlToText } from "html-to-text";
 const categoryOptions = ["Education", "Crime"];
 const statusOptions = ["Draft", "Published"];
 const EditBlog = () => {
   const { blogId } = useParams();
+  const [content, setContent] = useState("");
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -30,7 +31,8 @@ const EditBlog = () => {
         if (response) {
           const blog = response.data;
           setValue("title", blog.title);
-          setValue("content", blog.content);
+          setContent(htmlToText(blog.content));
+          // setValue("content", blog.content);
           setValue("status", blog.status);
           setValue("prevCategory", blog.category); // Set previous category
           setValue("category", blog.category); // Set current category
@@ -50,7 +52,7 @@ const EditBlog = () => {
     const result = await updateBlog(
       blogId,
       data.title,
-      data.content,
+      content,
       data.status,
       data.category,
       data.prevCategory, // Pass prevCategory to updateBlog function
@@ -66,6 +68,7 @@ const EditBlog = () => {
       console.log("Error editing blog.");
     }
   };
+  console.log("content", content);
 
   return (
     <>
@@ -77,6 +80,8 @@ const EditBlog = () => {
         statusOptions={statusOptions}
         submitText="Save"
         onSubmit={submitBlogForm}
+        content={content}
+        setContent={setContent}
       />
     </>
   );
