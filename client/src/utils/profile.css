@@ -13,6 +13,7 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 :root {
   font-size: 15px;
   /* padding: 0 1rem; */
+  background-image: url('https://drive.google.com/file/d/1T-uk8dM6pbdj1dS0YBBJPqUVnbaAf-ff/view?usp=drive_link');
 }
 
 *,
@@ -44,7 +45,7 @@ body {
   max-width: 80.5rem;
   margin: 0 auto;
   padding: 0rem 0;
-   background-image: url('https://drive.google.com/file/d/1T-uk8dM6pbdj1dS0YBBJPqUVnbaAf-ff/view?usp=drive_link');
+  
 }
 
 .btn {
