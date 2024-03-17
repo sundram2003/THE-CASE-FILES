@@ -56,6 +56,10 @@ const userSchema = new mongoose.Schema({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Blog"
   },
+  isModerator: {
+    type: Boolean,
+    default: false
+  },
   contributions: {
     type: Number,
     default: 0

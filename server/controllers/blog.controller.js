@@ -602,8 +602,14 @@ export const addComment = async (req, res) => {
     // 4. Add the comment to the corresponding blog
     const blog = await Blog.findByIdAndUpdate(blogId, {
       $push: { comments: newComment._id },
-    }).populate("comments")
-      .populate("createdBy");
+    }, { new: true }).populate({
+      path: "comments",
+      populate: {
+        path: "createdBy",
+        select: "firstName lastName email username profilePic role",
+        sort: { createdAt: 1 },
+      },
+    });
     if (!blog) {
       return res.status(404).json({
         success: false,
@@ -615,12 +621,12 @@ export const addComment = async (req, res) => {
     // io.emit('newComment', newComment); // Emitting 'newComment' event with the new comment data
 
     // get all comment on that blog
-    const allComments = await Comment.find({ blogId });
+    // const allComments = await Comment.find({ blogId });
     // 6. Return response
     return res.status(201).json({
       success: true,
       message: "Comment added successfully.",
-      data: { newComment, allComments, blog },
+      data: blog,
     });
   } catch (error) {
     console.log(error);

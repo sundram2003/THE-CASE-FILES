@@ -113,3 +113,53 @@ export const getUserByUserName = async (req, res) => {
     });
   }
 };
+export const addModerator = async (req, res) => {
+  try {
+    ///get username
+    //find user by username
+    //add moderator role
+    //save user
+    //return response
+    const { username } = req.body;
+    const user = await User.findOne({ username });
+    user.isModerator = true;
+    user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "User is now a moderator",
+    });
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error,
+    });
+  }
+}
+export const removeModerator = async (req, res) => {
+  try {
+    //get username
+    //find user by username and remove moderator role
+    //return response
+    const { username } = req.body;
+    const user = await User.findOne({ username });
+    user.isModerator = false;
+    user.save();
+    return res.status(200).json({
+      success: true,
+      message: "User is no longer a moderator",
+    });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error,
+    });
+  }
+}
