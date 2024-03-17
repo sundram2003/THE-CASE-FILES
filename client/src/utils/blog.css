@@ -466,7 +466,11 @@ ul.blog-list .slick-list.draggable {
   display: block;
 }
 .cs-blog-detail .cs-main-post img {
-  width: 100%;
+  width: 70%;
+  height:auto;
+  margin-left:110px;
+  border:5px solid black;
+  box-shadow: 5px 5px #888888;
 }
 .cs-blog-detail .cs-main-post {
   margin-bottom: 25px;

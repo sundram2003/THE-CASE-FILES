@@ -253,35 +253,34 @@ const IndividualBlog = () => {
           </form>
         </div>
         {!showComments && blog?.comments && (
-          <div className="comments p-4">
-            <h3>Comments</h3>
-            {comments.map((comment) => (
-              <div key={comment._id} className="comment">
-                <p>{comment.content}</p>
-                <p className="comment-author">
-                  By {comment?.createdBy?.firstName}{" "}
-                  {comment?.createdBy?.lastName} on{" "}
-                  {formattedDate(comment?.createdAt)}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-        {showComments && (
-          <div className="comments  p-4">
-            <h3>Comments</h3>
-            {blogComment.map((comment) => (
-              <div key={comment._id} className="comment">
-                <p>{comment.content}</p>
-                <p className="comment-author">
-                  By {comment?.createdBy?.firstName}{" "}
-                  {comment?.createdBy?.lastName} on{" "}
-                  {formattedDate(comment?.createdAt)}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+  <div className="comments p-4">
+    <h3 className="text-lg font-semibold mb-4">Comments</h3>
+    {comments.map((comment) => (
+      <div key={comment._id} className="comment mb-4">
+        <p className="text-sm text-gray-600">
+          By {comment?.createdBy?.firstName} {comment?.createdBy?.lastName} on {formattedDate(comment?.createdAt)}
+        </p>
+        <p className="text-base">{comment.content}</p>
+      </div>
+    ))}
+  </div>
+)}
+{showComments && (
+  <div className="comments p-4">
+    <h3 className="text-lg font-semibold mb-4">Comments</h3>
+    {blogComment.map((comment) => (
+      <div key={comment._id} className="comment mb-4">
+        <p className="text-sm text-gray-600">
+          <span className="font-bold">{comment?.createdBy?.firstName}</span>{" "}
+         <span className="font-bold">{comment?.createdBy?.lastName}</span> on{" "}
+          {formattedDate(comment?.createdAt)}
+        </p>
+        <p className="text-base">{comment.content}</p>
+      </div>
+    ))}
+  </div>
+)}
+
 
         {/* adding comments */}
       </div>
