@@ -59,7 +59,7 @@ body {
 }
 
 .btn:focus {
-  outline: 0.5rem auto #4d90fe;
+  outline: 0.8rem auto #4d90fe;
 }
 
 .visually-hidden {
@@ -73,7 +73,7 @@ body {
 /* Profile Section */
 
 .profile {
-  padding: 3rem 0;
+  padding: 2rem 0;
 }
 
 .profile::after {
@@ -81,10 +81,9 @@ body {
   display: block;
   clear: both;
 }
-
-.profile-image {
+profile-image {
   float: left;
-  width: calc(33.333% - 1rem);
+  width: calc(20% - 1rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -93,13 +92,17 @@ body {
 
 .profile-image img {
   border-radius: 50%;
+  width: 40%; 
+  height: auto; 
+  margin: -90px auto 0;
 }
+
 
 .profile-user-settings,
 .profile-stats,
 .profile-bio {
   float: left;
-  width: calc(66.666% - 2rem);
+  width: calc(46.666% - 2rem);
 }
 
 .profile-user-settings {
