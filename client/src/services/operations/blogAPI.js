@@ -16,6 +16,8 @@ const {
   ADD_COMMENTS_API,
   GET_COMMENTS_BY_BLOG_ID,
   SEARCH_BLOG_API,
+  ADD_MODERATOR_API,
+  REMOVE_MODERATOR_API,
 } = blogEndpoints;
 
 // create blog
@@ -375,4 +377,67 @@ export const getBlogbyTitle = async (title, token) => {
 
   toast.dismiss(toastId);
   return result;
+};
+
+//adding moderator
+export const addModeratorAPI = async (username, token) => {
+  let success = false;
+  let result = null;
+  try {
+    const response = await apiConnector(
+      "PUT",
+      ADD_MODERATOR_API,
+      { username },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Add Moderator API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Add Moderator");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    return response;
+  } catch (error) {
+    success = false;
+    console.log("Add Moderator API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
+};
+
+//removeing from moderator
+export const removeModeratorAPI = async (username, token) => {
+  // const toastId = toast.loading("Loading...");
+  let success = false;
+  let result = null;
+  try {
+    const response = await apiConnector(
+      "PUT",
+      REMOVE_MODERATOR_API,
+      { username },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Remove Moderator API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Remove Moderator");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    return response;
+  } catch (error) {
+    success = false;
+    console.log("Remove Moderator API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
 };
