@@ -34,4 +34,6 @@ export const blogEndpoints = {
   GET_COMMENTS_BY_BLOG_ID: BASE_URL + "/blog/getCommentsByBlogId",
   ADD_COMMENTS_API: BASE_URL + "/blog/addComment",
   SEARCH_BLOG_API: BASE_URL + "/blog/getBlogsByTitle",
+  ADD_MODERATOR_API: BASE_URL + "/auth/addModerator",
+  REMOVE_MODERATOR_API: BASE_URL + "/auth/removeModerator",
 };
