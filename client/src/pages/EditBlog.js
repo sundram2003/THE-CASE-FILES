@@ -31,8 +31,12 @@ const EditBlog = () => {
         if (response) {
           const blog = response.data;
           setValue("title", blog.title);
-          setContent(htmlToText(blog.content));
-          // setValue("content", blog.content);
+          // setContent(htmlToText(content));
+          console.log("value of content", blog.content);
+          console.log("type of content", typeof blog.content);
+          // setContent(blog.content);
+          setValue("content", blog.content);
+          console.log("content", blog.content);
           setValue("status", blog.status);
           setValue("prevCategory", blog.category); // Set previous category
           setValue("category", blog.category); // Set current category
@@ -45,7 +49,7 @@ const EditBlog = () => {
     };
     getBlog();
   }, [token, dispatch]);
-
+  console.log("content last", content);
   const submitBlogForm = async (data) => {
     console.log("data", data);
     let coverImgData = data.coverImg ? data.coverImg[0] : null;
@@ -68,7 +72,6 @@ const EditBlog = () => {
       console.log("Error editing blog.");
     }
   };
-  console.log("content", content);
 
   return (
     <>
@@ -80,6 +83,14 @@ const EditBlog = () => {
         statusOptions={statusOptions}
         submitText="Save"
         onSubmit={submitBlogForm}
+        // content={
+        // <div
+        //   dangerouslySetInnerHTML={{
+        //     __html: content,
+        //   }}
+        // />
+        // }
+
         content={content}
         setContent={setContent}
       />

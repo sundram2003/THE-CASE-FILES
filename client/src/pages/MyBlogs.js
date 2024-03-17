@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getMyBlogs } from "../services/operations/blogAPI";
+import { deleteBlog, getMyBlogs } from "../services/operations/blogAPI";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
 import RectangularBlogCard from "../components/common/BlogCard";
@@ -13,7 +13,7 @@ const BlogPage = () => {
   const { token } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   console.log("myblogs", blogs);
-
+  const [confirmationModal, setConfirmationModal] = useState(null);
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
@@ -52,6 +52,27 @@ const BlogPage = () => {
   // const EditButton = ({ onClick }) => {
   //   return <BiEdit onClick={onClick} />;
   // };
+  const handleDeleteBlog = async (blogId) => {
+    setLoading(true);
+    // const complaint_Id = blogId.toString();
+    console.log("blogId", blogId);
+
+    const result = await deleteBlog(blogId, token);
+    const response = await getMyBlogs(token);
+    if (response) {
+      const data = response?.data;
+      setBlogs(data); // Assuming data is an object with a 'blogs' property
+    }
+
+    console.log("Deleted Blog", result);
+    if (result) {
+      console.log("deleting blog");
+      // setComplaints(result);
+      // toast.success("Complaint Deleted Succesfully");
+    }
+    setConfirmationModal(null);
+    setLoading(false);
+  };
   console.log("Blog inside myBlogs", blogs);
   return (
     <section>
@@ -75,7 +96,14 @@ const BlogPage = () => {
                   imageUrl={post.coverImg}
                   date={formattedDate(post.updatedAt)}
                   title={post.title}
-                  content={post.content.substring(0, 300) + "..."} // Trim content to 20 words
+                  content={
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: post.content.substring(0, 300),
+                      }}
+                    />
+                  }
+                  // content={post.content.substring(0, 300) + "..."} // Trim content to 20 words
                   author={post?.username}
                   comments={post?.comments?.length}
                   downvotes={post?.downvotes?.length}
@@ -84,6 +112,7 @@ const BlogPage = () => {
                   category={post.category?.name}
                   status={post.status}
                   onEdit={() => handleEdit(post._id, post.status)}
+                  onDelete={() => handleDeleteBlog(post._id)}
                 />
               </div>
             ))

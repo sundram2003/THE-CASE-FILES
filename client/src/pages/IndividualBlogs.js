@@ -185,11 +185,13 @@ const IndividualBlog = () => {
             </span>
           </div>
         </div>
+        {/* shareing on social media */}
         <div className="flex gap-4">
           <FacebookShareButton
             url={window.location.href} // Use window.location.href to get the current page URL
             quote={blog?.title} // Use the blog title as the share quote
             // hashtag="#yourhashtag" // Add a hashtag if needed
+            content={blog?.content}
           >
             <FaFacebook
               className="cursor-pointer p-1 "
@@ -201,6 +203,7 @@ const IndividualBlog = () => {
             url={window.location.href} // Use window.location.href to get the current page URL
             title={blog?.title} // Use the blog title as the tweet text
             // hashtags={["yourhashtag"]} // Add hashtags if needed
+            content={blog?.content}
           >
             <FaTwitter
               className="cursor-pointer p-1 "
@@ -217,7 +220,13 @@ const IndividualBlog = () => {
             </h2>
             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <blockquote className="text-left-align">
-                <span> {blog?.content}</span>
+                {/* <span> {blog?.content}</span> */}
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: blog.content,
+                  }}
+                />
+                ;
               </blockquote>
             </div>
             <p></p>
@@ -253,34 +262,39 @@ const IndividualBlog = () => {
           </form>
         </div>
         {!showComments && blog?.comments && (
-  <div className="comments p-4">
-    <h3 className="text-lg font-semibold mb-4">Comments</h3>
-    {comments.map((comment) => (
-      <div key={comment._id} className="comment mb-4">
-        <p className="text-sm text-gray-600">
-          By {comment?.createdBy?.firstName} {comment?.createdBy?.lastName} on {formattedDate(comment?.createdAt)}
-        </p>
-        <p className="text-base">{comment.content}</p>
-      </div>
-    ))}
-  </div>
-)}
-{showComments && (
-  <div className="comments p-4">
-    <h3 className="text-lg font-semibold mb-4">Comments</h3>
-    {blogComment.map((comment) => (
-      <div key={comment._id} className="comment mb-4">
-        <p className="text-sm text-gray-600">
-          <span className="font-bold">{comment?.createdBy?.firstName}</span>{" "}
-         <span className="font-bold">{comment?.createdBy?.lastName}</span> on{" "}
-          {formattedDate(comment?.createdAt)}
-        </p>
-        <p className="text-base">{comment.content}</p>
-      </div>
-    ))}
-  </div>
-)}
-
+          <div className="comments p-4">
+            <h3 className="text-lg font-semibold mb-4">Comments</h3>
+            {comments.map((comment) => (
+              <div key={comment._id} className="comment mb-4">
+                <p className="text-sm text-gray-600">
+                  By {comment?.createdBy?.firstName}{" "}
+                  {comment?.createdBy?.lastName} on{" "}
+                  {formattedDate(comment?.createdAt)}
+                </p>
+                <p className="text-base">{comment.content}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        {showComments && (
+          <div className="comments p-4">
+            <h3 className="text-lg font-semibold mb-4">Comments</h3>
+            {blogComment.map((comment) => (
+              <div key={comment._id} className="comment mb-4">
+                <p className="text-sm text-gray-600">
+                  <span className="font-bold">
+                    {comment?.createdBy?.firstName}
+                  </span>{" "}
+                  <span className="font-bold">
+                    {comment?.createdBy?.lastName}
+                  </span>{" "}
+                  on {formattedDate(comment?.createdAt)}
+                </p>
+                <p className="text-base">{comment.content}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* adding comments */}
       </div>

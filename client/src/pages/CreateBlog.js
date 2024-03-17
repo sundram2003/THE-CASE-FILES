@@ -8,6 +8,7 @@ import JoditEditor from "jodit-react";
 import ReactTagInput from "@pathofdev/react-tag-input";
 import "@pathofdev/react-tag-input/build/index.css";
 import { createBlog, getAllCategory } from "../services/operations/blogAPI";
+import { htmlToText } from "html-to-text";
 const CreateBlog = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
@@ -23,6 +24,7 @@ const CreateBlog = () => {
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState([]);
   const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     //get all category
     const fetchAllCategory = async () => {
@@ -40,8 +42,9 @@ const CreateBlog = () => {
 
   const onSubmit = async (blogData) => {
     const formData = new FormData();
+    console.log("BlogData", blogData);
     formData.append("title", blogData.title);
-    formData.append("content", blogData.content);
+    formData.append("content", content);
     formData.append("status", blogData.status);
     formData.append("category", blogData.category);
     formData.append("tags", tags.join(","));

@@ -18,6 +18,7 @@ const {
   SEARCH_BLOG_API,
   ADD_MODERATOR_API,
   REMOVE_MODERATOR_API,
+  DELETE_BLOG_API,
 } = blogEndpoints;
 
 // create blog
@@ -377,6 +378,37 @@ export const getBlogbyTitle = async (title, token) => {
 
   toast.dismiss(toastId);
   return result;
+};
+
+//delete blog
+export const deleteBlog = async (blogId, token) => {
+  let success = false;
+
+  try {
+    const response = await apiConnector(
+      "DELETE",
+      DELETE_BLOG_API,
+      { blogId },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Delete Blog API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Delete Blog");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    return response;
+  } catch (error) {
+    success = false;
+    console.log("Delete Blog API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
 };
 
 //adding moderator
