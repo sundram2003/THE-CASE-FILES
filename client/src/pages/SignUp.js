@@ -67,9 +67,9 @@ const SignUp = () => {
                   <div className="flex flex-col order-2 order-lg-1 lg:w-2/3">
                     <p className="text-center text-3xl font-bold mb-5">
                       Sign up
-                    </p>
-
-                    <form onSubmit={handleSignUp} className="mx-4 lg:w-2/3">
+                    </p> 
+    
+                    <form onSubmit={handleSignUp} className="mx-4 lg:w-2/2">
                       <div className="flex items-center mb-4 gap-1">
                         <FaUser className="text-lg me-3" />
                         <div className="form-outline flex-grow ">
@@ -191,3 +191,5 @@ const SignUp = () => {
 };
 
 export default SignUp;
+
+
