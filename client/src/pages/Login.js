@@ -346,6 +346,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false); // State to manage loading animation
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -357,18 +358,27 @@ const Login = () => {
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Please enter email and password.");
       return;
     }
-    dispatch(login(email, password, navigate));
+    setLoading(true); // Start loading animation
+    try {
+      await dispatch(login(email, password, navigate));
+    } catch (error) {
+      console.error("Login failed:", error);
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading animation
+    }
   };
 
   return (
-    <section className="vh-100 bg-gray-200">
-      <div className="container h-full">
+    <section className="vh-100" style={{ backgroundImage: `url('https://wallpapers.com/images/high/8k-iphone-221b-baker-street-sherlock-holmes-kpcxul3vom1gts32.webp')` }}>
+  {/* Your content goes here */}
+      <div className="container h-full bg-url[{https://wallpapers.com/images/high/8k-iphone-221b-baker-street-sherlock-holmes-kpcxul3vom1gts32.webp}] ">
         <div className="row d-flex justify-center items-center h-full">
           <div className="col-lg-12 col-xl-11">
             <div className="card text-black rounded-2xl">
@@ -378,6 +388,9 @@ const Login = () => {
                     <p className="text-center text-3xl font-bold mb-5">
                       Login
                     </p>
+                    {loading && ( // Display loader if loading state is true
+                      <div className="loader"></div>
+                    )}
                     <form onSubmit={handleLogin} className="mx-8 lg:w-2/2">
                       <div className="flex items-center mb-8 justify-center">
                         <FaEnvelope className="text-lg me-3" />
@@ -387,7 +400,7 @@ const Login = () => {
                             name="email"
                             value={email}
                             onChange={handleOnChange}
-                            className="form-control px-3 py-2 rounded-3xl border-2 border-black w-full"
+                            className="form-control px-2 py-2 rounded-3xl border-2 border-black w-full relative"
                             placeholder="Email or Username"
                           />
                         </div>
