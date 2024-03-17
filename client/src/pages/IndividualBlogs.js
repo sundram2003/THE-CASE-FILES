@@ -4,6 +4,9 @@ import { useParams } from "react-router-dom";
 // // import Comment from "./Comment";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { FacebookShareButton, TwitterShareButton } from "react-share";
+import { FaFacebook, FaTwitter } from "react-icons/fa";
+
 import "../utils/blog.css";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
@@ -117,7 +120,8 @@ const IndividualBlog = () => {
       console.error("Error adding comment:", error);
     }
   };
-
+  const url = window.location.href;
+  console.log("url", url);
   // let uiCommentUpdate =
   //   commentsRealTime.length > 0 ? commentsRealTime : comments;
   // console.log("comments in individual blog", commentsRealTime);
@@ -181,6 +185,31 @@ const IndividualBlog = () => {
             </span>
           </div>
         </div>
+        <div className="flex gap-4">
+          <FacebookShareButton
+            url={window.location.href} // Use window.location.href to get the current page URL
+            quote={blog?.title} // Use the blog title as the share quote
+            // hashtag="#yourhashtag" // Add a hashtag if needed
+          >
+            <FaFacebook
+              className="cursor-pointer p-1 "
+              aria-hidden="true"
+              size={36}
+            />
+          </FacebookShareButton>
+          <TwitterShareButton
+            url={window.location.href} // Use window.location.href to get the current page URL
+            title={blog?.title} // Use the blog title as the tweet text
+            // hashtags={["yourhashtag"]} // Add hashtags if needed
+          >
+            <FaTwitter
+              className="cursor-pointer p-1 "
+              aria-hidden="true"
+              size={36}
+            />
+          </TwitterShareButton>
+        </div>
+
         <div className="cs-post-option-panel">
           <div className="rich-editor-text">
             <h2 className="text-slate-900 font-serif text-xl uppercase">
