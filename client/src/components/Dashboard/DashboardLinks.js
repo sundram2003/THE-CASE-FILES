@@ -26,12 +26,6 @@ export const sidebarLinks = [
     path: "/dashboard/earnings",
     icon: "VscCreditCard",
   },
-  {
-    id: 6,
-    name: "My Wallet",
-    path: "/dashboard/wallet",
-    icon: "VscSymbolColor",
-  },
 
   {
     id: 8,

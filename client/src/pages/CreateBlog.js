@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { addBlog } from "../slices/blogSlice";
@@ -59,6 +59,13 @@ const CreateBlog = () => {
     setLoading(false);
   };
   console.log("categoriesss", categories);
+  // const config = useMemo(
+  //   {
+  //     readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+  //     placeholder: placeholder || "Start typings...",
+  //   },
+  //   [placeholder]
+  // );
 
   return (
     <form
@@ -89,18 +96,21 @@ const CreateBlog = () => {
         >
           Blog Content<sup className="text-red-900">*</sup>
         </label>
-        <textarea
+        {/* <textarea
           id="content"
           placeholder="Enter Blog Content"
           {...register("content", { required: true })}
           className="form-style resize-x-none min-h-[130px] w-full"
-        />
-        {/* <JoditEditor
+        /> */}
+        <JoditEditor
           ref={editor}
           value={content}
-          onChange={(newContent) => setContent(newContent)}
-          onBlur={(e) => setValue("content", e.target.value)} // Ensure that the 'name' property is set correctly
-        /> */}
+          // config={config}
+          tabIndex={1} // tabIndex of textarea
+          onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+          onChange={(newContent) => {}}
+          name="content"
+        />
         {errors.content && (
           <span className="ml-2 text-xs tracking-wide text-pink-200">
             Blog Content is required**

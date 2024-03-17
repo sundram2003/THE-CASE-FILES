@@ -91,12 +91,17 @@ const IndividualBlog = () => {
   const handleAddComment = async (e) => {
     e.preventDefault();
     try {
-      const response = await addComments(id, comment, token); // Assuming there's a function to add a comment to a blog
+      const blogId = id;
+      const content = comment;
+      const response = await addComments(blogId, content, token); // Assuming there's a function to add a comment to a blog
+      console.log("response in add comment", response);
       if (response) {
         // Update the local state or fetch the updated blog again
         setComment(""); // Clear the comment input
+        console.log("response in add comment", response);
+        setComments(response?.data?.data?.content);
         toast.success("comments added");
-        socket.emit("comment", response.blogs.comments);
+        socket.emit("comment", response?.data?.data?.content);
       } else {
         console.error("Error adding comment");
       }
@@ -106,6 +111,7 @@ const IndividualBlog = () => {
   };
   let uiCommentUpdate =
     commentsRealTime.length > 0 ? commentsRealTime : comments;
+  console.log("comments in individual blog", comments);
   return (
     <div className="container">
       <div className="cs-blog-detail">
@@ -170,27 +176,6 @@ const IndividualBlog = () => {
             <h2 className="text-slate-900 font-serif text-xl uppercase">
               {blog?.title}
             </h2>
-            {/* <p></p>
-            <p>
-              After hamster hello less far astride where accordingly much
-              because some far innocently invoked far pre-set or objective this
-              pangolin tendentiously eagle near spread and overlay as abysmal a
-              and before walrus much therefore some close victorious jeepers
-              deeply forward while jeez and overlaid save hey ritually
-              notwithstanding mounted about nonchalantly and less hence far like
-              hey kissed. Hello impotent ravenous hey accordingly well much
-              lopsidedly one far blinked lorikeet sternly futile jeepers strewed
-              well following subconscious far on egregiously and away far alas
-              much forward in but far opposite less editorial some together.
-            </p> */}
-            {/* <h4>Simple answer is, because other candidates won’t.</h4> */}
-            {/* <p>
-              Ravenously while stridently coughed far promiscuously below jeez
-              much yikes bland that salamander cunningly some over abhorrent as
-              house with between ouch that well scurrilously alas capybara
-              massive outdid oh said hello majestically roadrunner lobster much
-              bled alas lighted together waved upheld.
-            </p> */}
             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
               <blockquote className="text-left-align">
                 <span> {blog?.content}</span>
@@ -230,7 +215,7 @@ const IndividualBlog = () => {
         </div>
 
         {blog?.comments && (
-          <div className="comments">
+          <div className="comments bg-slate-500 p-4">
             <h3>Comments</h3>
             {uiCommentUpdate.map((comment) => (
               <div key={comment._id} className="comment">
