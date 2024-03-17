@@ -1,6 +1,6 @@
 import React from "react";
 import "./RectangularBlogCard.css"; // Import CSS file for styling
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiTrash } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -22,6 +22,7 @@ const RectangularBlogCard = ({
   status,
   blogs,
   category,
+  onDelete,
 }) => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.auth);
@@ -69,6 +70,15 @@ const RectangularBlogCard = ({
               }}
             />
           )}
+          <BiTrash
+            id={id}
+            className="delete-icon text-red-400"
+            size={24}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent the onClick event from bubbling up to the card
+              onDelete(id); // Invoke onDelete function with the blog ID
+            }}
+          />
         </div>
         <p className="rectangular-blog-card-excerpt text-slate-600 font-serif">
           {content}
