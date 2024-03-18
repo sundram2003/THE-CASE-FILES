@@ -39,4 +39,5 @@ export const blogEndpoints = {
   ADD_MODERATOR_API: BASE_URL + "/auth/addModerator",
   REMOVE_MODERATOR_API: BASE_URL + "/auth/removeModerator",
   DELETE_COMMENT_API: BASE_URL + "/blog/deleteComment",
+  UPDATE_BLOGView_API: BASE_URL + "/blog/updateView",
 };
