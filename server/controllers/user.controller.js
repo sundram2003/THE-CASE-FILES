@@ -2,6 +2,7 @@ import { Blog } from "../models/blogs.model.js";
 import { User } from "../models/user.model.js";
 import { Comment } from "../models/comments.model.js";
 import { AdditionalDetails } from "../models/additionalDetails.schema.js";
+import { analytics } from "googleapis/build/src/apis/analytics/index.js";
 export const followUser = async (req, res) => {
   try {
     const loggedInUser = req.user.id;
@@ -204,6 +205,52 @@ export const deleteAccount = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User deleted successfully",
+    });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error,
+    });
+  }
+}
+
+export const getUserAnalytics = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    console.log(user)
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    let userAnalytics = await Blog.aggregate([
+      {
+        $match: {
+          createdBy: user._id,
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalViews: { $sum: "$views" },
+          totalBlogs: { $sum: 1 },
+          totalUpvotes: { $sum: { $size: '$upvotes' } },
+          totalDownvotes: { $sum: { $size: '$downvotes' } },
+          totalComments: { $sum: { $size: "$comments" } },
+        },
+      },
+    ]);
+    const userContributions = user.contributions;
+    return res.status(200).json({
+      success: true,
+      message: "User analytics",
+      userAnalytics,
+      userContributions,
     });
   }
   catch (error) {

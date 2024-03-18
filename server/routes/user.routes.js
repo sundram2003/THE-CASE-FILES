@@ -1,7 +1,7 @@
 import express from 'express';
 import { registerController, sendOtp, loginController, getAllUserDeatils, resetPasswordToken, resetPassword, changePassword } from '../controllers/auth.controller.js';
 import { auth, isAdmin } from '../middlewares/auth.js';
-import { addModerator, deleteAccount, followUser, getUserByUserName, removeModerator, unfollowUser } from '../controllers/user.controller.js';
+import { addModerator, deleteAccount, followUser, getUserAnalytics, getUserByUserName, removeModerator, unfollowUser } from '../controllers/user.controller.js';
 const router = express.Router();
 
 
@@ -10,6 +10,10 @@ router.post('/register', registerController);
 router.post('/sendotp', sendOtp);
 router.post('/login', loginController);
 router.get('/getAllUserDetails', auth, getAllUserDeatils);
+
+//user analytics
+router.get('/userAnalytics', auth, getUserAnalytics);
+
 router.put('/followUser', auth, followUser);
 router.put('/unfollowUser', auth, unfollowUser);
 router.get('/getUserByUsername/:username', auth, getUserByUserName);
