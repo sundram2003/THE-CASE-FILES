@@ -1,9 +1,9 @@
 import React from "react";
 import EditProfile from "./EditProfile";
 import DeleteAccount from "./DeleteAccount";
-import UpdatePassword from "../UpdatePassword";
+// import UpdatePassword from "../UpdatePassword";
 // import DeleteAccount from "./DeleteAccount";
-// import UpdatePassword from "./UpdatePassword";
+import UpdatePassword from "./UpdatePassword";
 const index = () => {
   return (
     <div>

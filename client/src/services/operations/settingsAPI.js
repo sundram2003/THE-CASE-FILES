@@ -13,6 +13,7 @@ const {
   GET_USER_BY_USERNAME_API,
   Follow_USER_API,
   UNFOLLOW_USER_API,
+  CHANGE_PASSWORD_API,
 } = settingsEndpoints;
 
 // getting all userDetails
@@ -177,3 +178,27 @@ export const unfollowUser = async (username, token) => {
   toast.dismiss(toastId);
   return result;
 };
+
+export async function changePassword(token, formData) {
+  console.log("formdata", formData);
+  const toastId = toast.loading("Loading...");
+  // const response = await apiConnector("POST", CHANGE_PASSWORD_API, formData, {
+  //   Authorization: `Bearer ${token}`,
+  // });
+  // console.log("CHANGE_PASSWORD_API API RESPONSE............", response);
+  try {
+    const response = await apiConnector("POST", CHANGE_PASSWORD_API, formData, {
+      Authorization: `Bearer ${token}`,
+    });
+    console.log("CHANGE_PASSWORD_API API RESPONSE............", response);
+
+    if (!response.data.success) {
+      throw new Error(response.data.message);
+    }
+    toast.success(response.data.message);
+  } catch (error) {
+    console.log("CHANGE_PASSWORD_API API ERROR............", error);
+    toast.error(error.response.data.message);
+  }
+  toast.dismiss(toastId);
+}

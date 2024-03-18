@@ -11,11 +11,11 @@ export default function UpdatePassword() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
-
+  // const { token } = useSelector((state) => state.auth);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setshowConfirmPassword] = useState(false);
   const { loading } = useSelector((state) => state.auth);
-
+  // console.log("update password token", token);
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
@@ -30,6 +30,7 @@ export default function UpdatePassword() {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     const token = location.pathname.split("/").at(-1);
+    console.log("token inside the update pass", token);
     dispatch(resetPassword(password, confirmPassword, token, navigate));
   };
 

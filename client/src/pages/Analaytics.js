@@ -52,7 +52,7 @@ const Analytics = () => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">User Analytics</h2>
-      {userAnalytics && (
+      {userAnalytics ? (
         <>
           <Line
             data={formatAnalyticsData()}
@@ -72,27 +72,31 @@ const Analytics = () => {
             <tbody>
               <tr>
                 <td className="px-4 py-2">Total Blogs</td>
-                <td className="px-4 py-2">{userAnalytics[0].totalBlogs}</td>
+                <td className="px-4 py-2">{userAnalytics[0]?.totalBlogs}</td>
               </tr>
               <tr>
                 <td className="px-4 py-2">Total Views</td>
-                <td className="px-4 py-2">{userAnalytics[0].totalViews}</td>
+                <td className="px-4 py-2">{userAnalytics[0]?.totalViews}</td>
               </tr>
               <tr>
                 <td className="px-4 py-2">Total Upvotes</td>
-                <td className="px-4 py-2">{userAnalytics[0].totalUpvotes}</td>
+                <td className="px-4 py-2">{userAnalytics[0]?.totalUpvotes}</td>
               </tr>
               <tr>
                 <td className="px-4 py-2">Total Downvotes</td>
-                <td className="px-4 py-2">{userAnalytics[0].totalDownvotes}</td>
+                <td className="px-4 py-2">
+                  {userAnalytics[0]?.totalDownvotes}
+                </td>
               </tr>
               <tr>
                 <td className="px-4 py-2">Total Comments</td>
-                <td className="px-4 py-2">{userAnalytics[0].totalComments}</td>
+                <td className="px-4 py-2">{userAnalytics[0]?.totalComments}</td>
               </tr>
             </tbody>
           </table>
         </>
+      ) : (
+        <p className="text-lg">No blogs yet.</p>
       )}
     </div>
   );
