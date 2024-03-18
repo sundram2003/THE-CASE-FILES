@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { deleteBlog, getMyBlogs } from "../services/operations/blogAPI";
+import {
+  deleteBlog,
+  getMyBlogs,
+  updateView,
+} from "../services/operations/blogAPI";
 import { formattedDate } from "../utils/formattedDate";
 import { useSelector } from "react-redux";
 import RectangularBlogCard from "../components/common/BlogCard";
@@ -35,6 +39,18 @@ const BlogPage = () => {
   }, [token]);
 
   const handleReadMore = (blogId) => {
+    //adding updateview api
+
+    const ViewHandler = async (blogId) => {
+      try {
+        const response = await updateView(blogId);
+        console.log("response", response);
+      } catch (error) {
+        console.error("Error updating view:", error);
+      }
+      ViewHandler();
+    };
+
     navigate(`/blog/getBlogs/${blogId}`); // Redirect to individual blog page
     setLoading(true); // Set loading to true when editing starts
   };
