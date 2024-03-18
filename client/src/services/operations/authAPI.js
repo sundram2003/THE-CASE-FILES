@@ -4,7 +4,13 @@ import { apiConnector } from "../apiconnector";
 import { toast } from "react-hot-toast";
 import { setUser } from "../../slices/profileSlice";
 import { setLoading, setToken } from "../../slices/authSlice";
-const { SENDOTP_API, SIGNUP_API, LOGIN_API } = endpoints;
+const {
+  SENDOTP_API,
+  SIGNUP_API,
+  LOGIN_API,
+  RESETPASSWORD_API,
+  RESETPASSTOKEN_API,
+} = endpoints;
 export function sendOtp(email, navigate) {
   console.log("sendOtp", email);
   return async (dispatch) => {
@@ -123,5 +129,52 @@ export function logout(navigate) {
     localStorage.removeItem("user");
     toast.success("Logged out successfully");
     navigate("/");
+  };
+}
+
+export function getPasswordResetToken(email, setEmailSent) {
+  console.log("inside reset passwordToken api");
+  return async (dispatch) => {
+    dispatch(setLoading(true));
+    try {
+      // const hardcodedApiUrl = "https://api.example.com/resetPasswordToken";
+      const response = await apiConnector("POST", RESETPASSTOKEN_API, {
+        email,
+      });
+      console.log("API response ", response);
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      toast.success("Email sent succesfully");
+      setEmailSent(true);
+    } catch (error) {
+      console.log("error in resetPassword", error);
+      toast.error("Failed to sent otp");
+    }
+    dispatch(setLoading(false));
+  };
+}
+export function resetPassword(password, confirmPassword, token) {
+  return async (dispatch) => {
+    dispatch(setLoading(true));
+    try {
+      const response = await apiConnector("POST", RESETPASSWORD_API, {
+        password,
+        confirmPassword,
+        token,
+      });
+
+      console.log("RESET Password RESPONSE ... ", response);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+
+      toast.success("Password has been reset successfully");
+    } catch (error) {
+      console.log("RESET PASSWORD TOKEN Error", error);
+      toast.error("Unable to reset password");
+    }
+    dispatch(setLoading(false));
   };
 }

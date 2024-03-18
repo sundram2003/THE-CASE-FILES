@@ -203,14 +203,14 @@ const CreateBlog = () => {
         )}
       </div>
 
-      <button
+      {/* <button
         type="submit"
         className="text-black p-2 bg-slate-500 rounded-md mt-2"
       >
         Submit
-      </button>
+      </button> */}
       <div className="flex justify-end gap-x-2">
-        <IconBtn disabled={loading} text={"Save Changes"}>
+        <IconBtn disabled={loading} text={"Submit"}>
           <MdNavigateNext />
         </IconBtn>
       </div>

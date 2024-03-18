@@ -164,15 +164,6 @@ export default function MyProfile() {
                 {userDetails?.contactNo ?? "Add Contact Number"}
               </p>
             </div>
-            {/* {(user.accountType === ACCOUNT_TYPE.STUDENT ||
-              user.accountType === ACCOUNT_TYPE.MESS_COMMITEE) && (
-              <div>
-                <p className="mb-2 text-sm text-green-100">Branch</p>
-                <p className="text-sm font-medium text-white">
-                  {userDetails?.additionalDetails?.branch ?? "Add Your Branch"}
-                </p>
-              </div>
-            )} */}
 
             <div>
               <p className="mb-2 text-sm font-semibold text-slate-800">

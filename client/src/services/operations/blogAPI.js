@@ -19,6 +19,7 @@ const {
   ADD_MODERATOR_API,
   REMOVE_MODERATOR_API,
   DELETE_BLOG_API,
+  DELETE_COMMENT_API,
 } = blogEndpoints;
 
 // create blog
@@ -406,6 +407,37 @@ export const deleteBlog = async (blogId, token) => {
   } catch (error) {
     success = false;
     console.log("Delete Blog API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
+};
+
+//delete comment
+export const deleteComment = async (commentId, token) => {
+  let success = false;
+
+  try {
+    const response = await apiConnector(
+      "DELETE",
+      DELETE_COMMENT_API,
+      { commentId },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Delete Comment API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Delete Comment");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    return response;
+  } catch (error) {
+    success = false;
+    console.log("Delete Comment API ERROR............", error);
     toast.error(error.message);
     return success;
   }

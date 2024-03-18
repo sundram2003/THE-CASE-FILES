@@ -23,6 +23,8 @@ import ContactUs from "./pages/ContactUs";
 import UserProfile from "./pages/UserProfile";
 import Blogs from "./pages/Blogs";
 import SearchBlogs from "./components/common/SearchBlogs";
+import ForgotPassword from "./components/Dashboard/Settings/ForgotPassword";
+import UpdatePassword from "./components/Dashboard/UpdatePassword";
 function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col font-inter">
@@ -31,6 +33,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/update-password/:id" element={<UpdatePassword />} />
         <Route path="/register" element={<Signup />}></Route>
         <Route path="/verify-email" element={<VerifyEmail />}></Route>
         <Route path="/aboutUs" element={<AboutUs />}></Route>
@@ -55,7 +58,7 @@ function App() {
             element={<UserProfile />}
           />
         </Route>
-
+        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="*" element={<Error />}></Route>
       </Routes>
     </div>

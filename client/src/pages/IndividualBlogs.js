@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 // import axios from "axios";
 // // import Comment from "./Comment";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,8 +16,10 @@ import {
   likeBlog,
   getCommentsByBlogId,
   addComments,
+  deleteBlog,
+  deleteComment,
 } from "../services/operations/blogAPI";
-import { BiCommentDots, BiDislike, BiLike } from "react-icons/bi";
+import { BiCommentDots, BiDislike, BiLike, BiTrash } from "react-icons/bi";
 import { FaCalendarDay } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
@@ -34,6 +36,11 @@ const IndividualBlog = () => {
   const [commentsRealTime, setCommentsRealTime] = useState([]);
   const [blogComment, setBlogComment] = useState([]);
   const [showComments, setShowComments] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [confirmationModal, setConfirmationModal] = useState(null);
+  const { userDetails } = useSelector((state) => state.profile);
+  console.log("user just after ", userDetails);
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchBlog = async () => {
       try {
@@ -55,9 +62,13 @@ const IndividualBlog = () => {
       console.log("newcomment", newComment);
       setCommentsRealTime(newComment);
     });
+    // setComments(blog?.comments);
   }, []);
-  console.log("blog", blog);
+  // useEffect(() => {
 
+  // }); // Update the comments state when the blog changes
+  console.log("blog", blog);
+  console.log("user", userDetails);
   if (!blog) {
     return <div>Loading...</div>; // Render loading indicator while blog is being fetched
   }
@@ -88,14 +99,42 @@ const IndividualBlog = () => {
     }
   };
 
-  // const toggleComments = async (e) => {
-  //   e.preventDefault();
-  //   if (!showComments) {
-  //     await handleGetComments();
-  //   }
-  //   if (showComments) setComments([]); // Clear comments when hiding
-  //   setShowComments(!showComments);
-  // };
+  const onDelete = async (blogId) => {
+    setLoading(true);
+    // const complaint_Id = blogId.toString();
+    console.log("blogId", blogId);
+
+    const result = await deleteBlog(blogId, token);
+
+    console.log("Deleted Blog", result);
+    if (result) {
+      console.log("deleting blog");
+      // setComplaints(result);
+      navigate("/");
+
+      // toast.success("Complaint Deleted Succesfully");
+    }
+    setConfirmationModal(null);
+    setLoading(false);
+  };
+  // comment delete
+  const onDeleteComment = async (commentId) => {
+    setLoading(true);
+    // const complaint_Id = blogId.toString();
+    console.log("blogId", commentId);
+
+    const result = await deleteComment(commentId, token);
+
+    console.log("Deleted comment", result);
+    if (result) {
+      console.log("deleting comment");
+      // setComplaints(result);
+
+      // toast.success("Complaint Deleted Succesfully");
+    }
+    setConfirmationModal(null);
+    setLoading(false);
+  };
 
   const handleAddComment = async (e) => {
     e.preventDefault();
@@ -156,6 +195,20 @@ const IndividualBlog = () => {
             </div>
           </div>
           <div className="flex flex-row gap-4 px-3 justify-end ">
+            {userDetails?.data?.isModerator && (
+              <span className="post-date">
+                <BiTrash
+                  id={blog?._id}
+                  className="delete-icon text-red-400 cursor-pointer"
+                  size={24}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(blog?._id);
+                  }}
+                />
+              </span>
+            )}
+
             <span className="post-date">
               <i className="cs-color icon-calendar6"></i>
               <BiLike aria-hidden="true" size={20} onClick={handleUpVote} />
@@ -289,6 +342,19 @@ const IndividualBlog = () => {
                     {comment?.createdBy?.lastName}
                   </span>{" "}
                   on {formattedDate(comment?.createdAt)}
+                  <span className="font-bold ">
+                    {userDetails?.data?.isModerator && ( // Display delete icon only for moderators
+                      <span
+                        className="delete-comment-icon"
+                        onClick={() => onDeleteComment(comment._id)}
+                      >
+                        <BiTrash
+                          className="cursor-pointer text-slate-600"
+                          size={20}
+                        />
+                      </span>
+                    )}
+                  </span>
                 </p>
                 <p className="text-base">{comment.content}</p>
               </div>
