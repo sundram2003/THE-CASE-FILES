@@ -30,7 +30,7 @@ export const blogEndpoints = {
   GET_BLOG_COMMENTS: BASE_URL + "/blog/getBlogComments",
   // ADD_BLOG_COMMENT: BASE_URL + "/blog/addBlogComment",
   GET_ALL_UPVOTED_BLOGS: BASE_URL + "/blog/getBlogsByUpvote",
-  GET_ALL_RECENT_BLOGS: BASE_URL + "/blog/getAllRecentBlogs",
+  GET_ALL_RECENT_BLOGS: BASE_URL + "/blog/getallBlogs",
   DELETE_BLOG_API: BASE_URL + "/blog/delete",
   UPDATE_BLOG_API: BASE_URL + "/blog/update",
   GET_ALL_CATEGORY_API: BASE_URL + "/category/getAllCategories",
