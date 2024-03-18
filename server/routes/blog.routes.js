@@ -32,7 +32,7 @@ router.put("/downvote", auth, downvoteBlog);
 router.delete("/delete", auth, deleteBlog);
 router.put("/update/:blogId", auth, updateBlog);
 router.get("/getBlogsByUpvote", getBlogsByUpvotes);
-router.put("/updateView", updateView);
+router.put("/updateView", auth, updateView);
 router.put("/addComment/:blogId", auth, addComment);
 //https:localhost:4000/api/v1/blog/addComment/124dfnqr23r2
 router.delete("/deleteComment", auth, deleteComment);

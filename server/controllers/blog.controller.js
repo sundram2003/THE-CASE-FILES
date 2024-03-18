@@ -152,7 +152,7 @@ export const getAllBlogs = async (req, res) => {
 
       // Unwind category array created by $lookup
       { $unwind: "$category" },
-    ]);
+    ]).sort({ createdAt: -1 });
 
     // 2. return response
     return res.status(200).json({
@@ -179,7 +179,7 @@ export const getMyBlogs = async (req, res) => {
     // 1. get user id from req.user
     const userId = req.user.id;
     // 2. get blogs by user
-    const userDetails = await User.findById(userId).populate("blogs");
+    const userDetails = await User.findById(userId).populate("blogs").sort({ createdAt: -1 });
     // 3. return response
     return res.status(200).json({
       success: true,
@@ -311,6 +311,10 @@ export const upvoteBlog = async (req, res) => {
     const userId = req.user.id;
     // 3. check if user has already upvoted
     const blog = await Blog.findById(blogId);
+    if (blog.downvotes.includes(userId)) {
+      blog.downvotes.pull(userId);
+      await blog.save();
+    }
     if (blog.upvotes.includes(userId)) {
       // 4. if user has already upvoted, remove upvote
       blog.upvotes.pull(userId);
@@ -355,7 +359,17 @@ export const downvoteBlog = async (req, res) => {
     const userId = req.user.id;
     // 3. check if user has already downvoted
     let blog = await Blog.findById(blogId);
-    console.log("Printing blog", blog);
+    // console.log("Printing blog", blog);
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+    if (blog.upvotes.includes(userId)) {
+      blog.upvotes.pull(userId);
+      await blog.save();
+    }
     if (blog?.downvotes.includes(userId)) {
       // 4. if user has already downvoted, remove downvote
       blog.downvotes.pull(userId);
@@ -734,6 +748,7 @@ export const updateView = async (req, res) => {
     */
     // 1. get blog id from request params
     const { blogId } = req.body;
+    const id = req.user.id;
     // 2. get blog by id
     const blog = await Blog.findById(blogId);
     const userId = blog.createdBy;
@@ -744,20 +759,42 @@ export const updateView = async (req, res) => {
       });
     }
     // 3. update view
-    const blogView = blog.views;
+    console.log(blog);
+    if (blog.views == undefined) {
+      blog.views = [];
+    }
+    const blogView = blog.views.length;
+    console.log(blogView);
+    if (blog.views.length == 0) {
+      blog.views.push(id);
+      await blog.save();
+      return res.status(200).json({
+        success: true,
+        message: "View updated successfully",
+        noOfViews: blog.views.length,
+      });
+    }
     if (blogView == 99) {
       const user = await User.findByIdAndUpdate(userId, {
         $inc: { contributions: 100 },
       });
     }
-    blog.views = blogView + 1;
-    await blog.save();
-    // 4. return response
-    return res.status(200).json({
-      success: true,
-      message: "View updated successfully",
-      data: blog,
-    });
+    if (blog.views.includes(id)) {
+      return res.status(200).json({
+        sucess: true,
+        blog,
+      });
+    }
+    else {
+      blog.views.push(id);
+      await blog.save();
+      // 4. return response
+      return res.status(200).json({
+        success: true,
+        message: "View updated successfully",
+        noOfViews: blog.views.length,
+      });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({
