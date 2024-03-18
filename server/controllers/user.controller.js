@@ -262,3 +262,55 @@ export const getUserAnalytics = async (req, res) => {
     });
   }
 }
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    const { dob, gender, firstName, lastName, contactNumber, about } = req.body;
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
+    await user.save();
+    let additionalDetails = await AdditionalDetails.findOne({ user: req.user.id });
+    console.log("printng additonal details", additionalDetails)
+    if (!additionalDetails) {
+      additionalDetails = new AdditionalDetails({
+        user: req.user.id,
+      });
+    }
+    console.log(contactNumber)
+    if (dob != "") {
+      additionalDetails.dob = dob;
+    }
+    if (gender != "") {
+      additionalDetails.gender = gender;
+    }
+    if (contactNumber) {
+      additionalDetails.contactNumber = contactNumber;
+    }
+    if (about != "") {
+      additionalDetails.about = about;
+    }
+    await additionalDetails.save();
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      additionalDetails,
+      user
+    });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error,
+    });
+  }
+}

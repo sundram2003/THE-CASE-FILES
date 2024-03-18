@@ -1,7 +1,7 @@
 import express from 'express';
 import { registerController, sendOtp, loginController, getAllUserDeatils, resetPasswordToken, resetPassword, changePassword } from '../controllers/auth.controller.js';
 import { auth, isAdmin } from '../middlewares/auth.js';
-import { addModerator, deleteAccount, followUser, getUserAnalytics, getUserByUserName, removeModerator, unfollowUser } from '../controllers/user.controller.js';
+import { addModerator, deleteAccount, followUser, getUserAnalytics, getUserByUserName, removeModerator, unfollowUser, updateProfile } from '../controllers/user.controller.js';
 const router = express.Router();
 
 
@@ -26,7 +26,8 @@ router.post("/reset-password-token", resetPasswordToken);
 
 // Route for resetting user's password after verification
 router.post("/reset-password", resetPassword);
-
+//update profile
+router.put('/updateProfile', auth, updateProfile);
 //change password
 router.post('/changePassword', auth, changePassword);
 export default router;

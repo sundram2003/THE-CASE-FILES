@@ -31,8 +31,6 @@ At CredLock, we believe in creating a vibrant community where students are activ
 
 Join us at CredLock and embark on a shared adventure of knowledge, connection, and growth. Together, let's make learning a collaborative and enriching experience.
 
-[Visit CredLock](#) | [Contribute](#)
-
 ## Usage
 
 - Create a MongoDB database and obtain your `MongoDB URI` - [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/register)
