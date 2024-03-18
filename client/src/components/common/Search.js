@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getBlogbyTitle } from "../../services/operations/blogAPI";
 import SearchBlogs from "./SearchBlogs";
+import toast from "react-hot-toast";
 import Footer from "./Footer";
 const SearchComponent = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -16,6 +17,12 @@ const SearchComponent = () => {
     try {
       let response;
       if (searchCriteria === "username") {
+        if (!token) {
+          // If not logged in, redirect to login page and display toast
+          navigate("/login");
+          toast.error("Please log in !!!");
+          return;
+        }
         response = await getUserByUsername(searchTerm, token);
         const data = response;
         if (data) {
@@ -51,7 +58,7 @@ const SearchComponent = () => {
     setShowOptions(false);
     // Set the search criteria and hide options when an option is selected
   };
-  const options = ["username", "blogTitle", "tags"];
+  const options = ["username", "blogTitle"];
 
   return (
     <div>

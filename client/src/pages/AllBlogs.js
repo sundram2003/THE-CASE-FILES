@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BlogCard from "../components/common/AllBlogsCard";
-import { getAllBlogs } from "../services/operations/blogAPI";
+import { getAllBlogs, updateView } from "../services/operations/blogAPI";
 import { formattedDate } from "../utils/formattedDate";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import IndividualBlog from "./IndividualBlogs";
@@ -26,6 +26,15 @@ const AllBlogs = () => {
   }, []);
   console.log("blogs", blogs);
   const handleReadMore = (blogId) => {
+    const ViewHandler = async (blogId) => {
+      try {
+        const response = await updateView(blogId);
+        console.log("response", response);
+      } catch (error) {
+        console.error("Error updating view:", error);
+      }
+    };
+    ViewHandler();
     if (token === null) {
       toast.success("Please login to read more");
       navigate(`/login`);

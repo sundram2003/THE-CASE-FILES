@@ -20,6 +20,7 @@ const {
   REMOVE_MODERATOR_API,
   DELETE_BLOG_API,
   DELETE_COMMENT_API,
+  UPDATE_BLOGView_API,
 } = blogEndpoints;
 
 // create blog
@@ -501,6 +502,37 @@ export const removeModeratorAPI = async (username, token) => {
   } catch (error) {
     success = false;
     console.log("Remove Moderator API ERROR............", error);
+    toast.error(error.message);
+    return success;
+  }
+};
+
+//update view
+export const updateView = async (blogId, token) => {
+  let success = false;
+
+  try {
+    const response = await apiConnector(
+      "PUT",
+      UPDATE_BLOGView_API,
+      { blogId },
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    );
+
+    console.log("Update View API RESPONSE............", response);
+
+    if (!response?.data?.success) {
+      throw new Error("Could Not Update View");
+    }
+
+    toast.success(response.data.message);
+    success = true;
+    return response;
+  } catch (error) {
+    success = false;
+    console.log("Update View API ERROR............", error);
     toast.error(error.message);
     return success;
   }
