@@ -25,6 +25,7 @@ import Blogs from "./pages/Blogs";
 import SearchBlogs from "./components/common/SearchBlogs";
 import ForgotPassword from "./components/Dashboard/Settings/ForgotPassword";
 import UpdatePassword from "./components/Dashboard/UpdatePassword";
+import Analaytics from "./pages/Analaytics";
 function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col font-inter">
@@ -57,6 +58,7 @@ function App() {
             path="/auth/getUserByUsername/:username"
             element={<UserProfile />}
           />
+          <Route path="/userAnalytics" element={<Analaytics />} />
         </Route>
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="*" element={<Error />}></Route>

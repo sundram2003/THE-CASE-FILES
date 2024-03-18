@@ -21,6 +21,7 @@ const {
   DELETE_BLOG_API,
   DELETE_COMMENT_API,
   UPDATE_BLOGView_API,
+  GET_USER_ANALYTICS,
 } = blogEndpoints;
 
 // create blog
@@ -535,5 +536,22 @@ export const updateView = async (blogId, token) => {
     console.log("Update View API ERROR............", error);
     toast.error(error.message);
     return success;
+  }
+};
+
+//user analytic
+export const userAnalytic = async (token) => {
+  try {
+    const response = await apiConnector("GET", GET_USER_ANALYTICS, null, {
+      Authorization: `Bearer ${token}`,
+    });
+    console.log("GET USER ANALYTICS API RESPONSE............", response);
+    if (!response?.data?.success) {
+      throw new Error("Could Not Fetch All Blogs");
+    }
+    return response;
+  } catch (error) {
+    console.log("GET USER ANALYTICS API ERROR............", error);
+    throw error;
   }
 };

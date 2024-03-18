@@ -34,4 +34,11 @@ export const sidebarLinks = [
   //   icon: "VscShield",
   //   type: ACCOUNT_TYPE.ADMIN,
   // },
+  // ..making for analyytics
+  {
+    id: 5,
+    name: "Analytics",
+    path: "/auth/userAnalytics",
+    icon: "VscCreditCard",
+  },
 ];
