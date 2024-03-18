@@ -1,4 +1,4 @@
-const generateOTPTemplate = (otp) => {
+export const generateOTPTemplate = (otp) => {
   return `<!DOCTYPE html>
 <html>
   <head>
@@ -149,4 +149,3 @@ const generateOTPTemplate = (otp) => {
 `;
 };
 
-module.exports = generateOTPTemplate;

@@ -390,6 +390,7 @@ export const deleteBlog = async (req, res) => {
     1. get blog id from request body
     2. get blog by id
     3. check if user is authorized to delete the blog
+    //delete all comments of that blog
     4. delete blog
     5. return response
     */
@@ -401,6 +402,7 @@ export const deleteBlog = async (req, res) => {
       $pull: { blogs: blogId },
       $inc: { contributions: -5 },
     });
+    const deleteComment = await Comment.deleteMany({ blogId: blogId });
     const deletedBlog = await Blog.findByIdAndDelete(blogId);
     // 5. return response
     return res.status(200).json({
@@ -642,3 +644,82 @@ export const addComment = async (req, res) => {
     });
   }
 };
+export const deleteComment = async (req, res) => {
+  try {
+    /*
+    1. get comment id from request params
+    2. check if user is authorized to delete the comment
+    3. delete comment
+    4. return response
+    */
+    // 1. get comment id from request params
+    const { commentId } = req.body;
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        message: "Comment not found",
+      });
+    }
+    // 2. check if user is authorized to delete the comment
+    if (!(comment.createdBy == req.user.id || req.user.role == "admin" || req.user.isModerator == true)) {
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this comment",
+      });
+    }
+    //remove this comment from blog
+    const blog = await Blog.findByIdAndUpdate(comment.blogId,
+      { $pull: { comments: commentId } },
+      { new: true }
+    ).populate({
+      path: "comments",
+      populate: {
+        path: "createdBy",
+        select: "firstName lastName email username profilePic role",
+        sort: { createdAt: 1 },
+      },
+    });
+    // 3. delete comment
+    const deletedComment = await Comment.findByIdAndDelete(commentId);
+    // 4. return response
+    return res.status(200).json({
+      success: true,
+      message: "Comment deleted successfully",
+      deletedComment,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in deleting the comment",
+      errorMessage: error.message,
+    });
+  }
+}
+export const getCommentDetails = async (req, res) => {
+  try {
+    /*
+    1. get comment id from request params
+    2. get comment by id
+    3. return response
+    */
+    // 1. get comment id from request params
+    const { commentId } = req.params;
+    // 2. get comment by id
+    const comment = await Comment.findById(commentId);
+    // 3. return response
+    return res.status(200).json({
+      success: true,
+      message: "Comment fetched successfully",
+      data: comment,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in fetching the comment",
+      errorMessage: error.message,
+    });
+  }
+}

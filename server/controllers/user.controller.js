@@ -1,5 +1,7 @@
+import { Blog } from "../models/blogs.model.js";
 import { User } from "../models/user.model.js";
-
+import { Comment } from "../models/comments.model.js";
+import { AdditionalDetails } from "../models/additionalDetails.schema.js";
 export const followUser = async (req, res) => {
   try {
     const loggedInUser = req.user.id;
@@ -152,6 +154,56 @@ export const removeModerator = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User is no longer a moderator",
+    });
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+      error,
+    });
+  }
+}
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    //find user by username
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    //delete its all blog
+    const deletedBlog = await Blog.deleteMany({
+      createdBy: user._id,
+    })
+    //delete its all comment
+    const deletedComment = await Comment.deleteMany({
+      createdBy: user._id,
+    })
+    //delete its all following
+    const deletedFollowing = await User.updateMany(
+      { following: user._id },
+      { $pull: { following: user._id } }
+    )
+    //delete its all followers
+    const deletedFollowers = await User.updateMany(
+      { followers: user._id },
+      { $pull: { followers: user._id } }
+    )
+    //delete its additional details 
+    const deletedAdditionalDetails = await AdditionalDetails.deleteOne({
+      user: user._id,
+    })
+    //delete user
+    const deletedUser = await User.deleteOne({ _id: user._id });
+    //return res
+    return res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
     });
   }
   catch (error) {

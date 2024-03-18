@@ -1,7 +1,7 @@
 import express from 'express';
 import { registerController, sendOtp, loginController, getAllUserDeatils } from '../controllers/auth.controller.js';
 import { auth, isAdmin } from '../middlewares/auth.js';
-import { addModerator, followUser, getUserByUserName, removeModerator, unfollowUser } from '../controllers/user.controller.js';
+import { addModerator, deleteAccount, followUser, getUserByUserName, removeModerator, unfollowUser } from '../controllers/user.controller.js';
 const router = express.Router();
 
 
@@ -15,4 +15,5 @@ router.put('/unfollowUser', auth, unfollowUser);
 router.get('/getUserByUsername/:username', auth, getUserByUserName);
 router.put('/addModerator', auth, isAdmin, addModerator);
 router.put('/removeModerator', auth, isAdmin, removeModerator);
+router.delete('/deleteAccount', auth, deleteAccount);
 export default router;
