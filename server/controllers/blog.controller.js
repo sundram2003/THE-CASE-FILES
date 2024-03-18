@@ -767,3 +767,4 @@ export const updateView = async (req, res) => {
     });
   }
 }
+
