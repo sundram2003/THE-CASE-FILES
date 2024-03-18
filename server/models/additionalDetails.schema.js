@@ -20,7 +20,6 @@ const additionalDetailsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    enum: ["Male", "Female", "Other"],
   }
 }, { timestamps: true });
 
