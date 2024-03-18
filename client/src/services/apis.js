@@ -8,7 +8,7 @@ export const endpoints = {
 };
 
 export const settingsEndpoints = {
-  CHANGE_PASSWORD_API: BASE_URL + "/auth/changePassword",
+  // CHANGE_PASSWORD_API: BASE_URL + "/auth/changePassword",
   DELETE_PROFILE_API: BASE_URL + "/auth/deleteAccount",
   GET_USER_DETAILS_API: BASE_URL + "/auth/getAllUserDetails",
   HANDLE_SEARCH_API: BASE_URL + "/profile/handleSearch",
@@ -17,6 +17,7 @@ export const settingsEndpoints = {
   GET_USER_BY_USERNAME_API: BASE_URL + "/auth/getUserByUsername",
   Follow_USER_API: BASE_URL + "/auth/followUser",
   UNFOLLOW_USER_API: BASE_URL + "/auth/unfollowUser",
+  CHANGE_PASSWORD_API: BASE_URL + "/auth/changePassword",
 };
 
 export const blogEndpoints = {

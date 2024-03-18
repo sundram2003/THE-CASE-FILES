@@ -58,7 +58,7 @@ function App() {
             path="/auth/getUserByUsername/:username"
             element={<UserProfile />}
           />
-          <Route path="/userAnalytics" element={<Analaytics />} />
+          <Route path="/auth/userAnalytics" element={<Analaytics />} />
         </Route>
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route path="*" element={<Error />}></Route>

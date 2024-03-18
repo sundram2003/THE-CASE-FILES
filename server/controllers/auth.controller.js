@@ -1,11 +1,11 @@
 // Desc: Auth Controller
 import otpGenerator from "otp-generator";
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { User } from '../models/user.model.js';
-import { OTP } from '../models/otp.model.js';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { User } from "../models/user.model.js";
+import { OTP } from "../models/otp.model.js";
 import { AdditionalDetails } from "../models/additionalDetails.schema.js";
-import { cryptoRandomStringAsync } from 'crypto-random-string';
+import { cryptoRandomStringAsync } from "crypto-random-string";
 import { mailSender } from "../utils/mailSender.js";
 export const sendOtp = async (req, res) => {
   try {
@@ -29,7 +29,7 @@ export const sendOtp = async (req, res) => {
     let otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
-      specialChars: false,//only numbers
+      specialChars: false, //only numbers
     });
     const result = await OTP.findOne({ otp: otp });
     //check whether otp is unqiue or not -> brute force
@@ -52,7 +52,6 @@ export const sendOtp = async (req, res) => {
       message: "OTP sent successfully",
       otp: otp,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -75,9 +74,24 @@ export const registerController = async (req, res) => {
     9. return response
     */
     //1. Fetch data from req.body
-    const { username, email, password, confirmPassword, firstName, lastName, otp } = req.body;
+    const {
+      username,
+      email,
+      password,
+      confirmPassword,
+      firstName,
+      lastName,
+      otp,
+    } = req.body;
     //2. Perform Validation -> all fields filled
-    if (!email || !password || !confirmPassword || !firstName || !lastName || !otp) {
+    if (
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !firstName ||
+      !lastName ||
+      !otp
+    ) {
       return res.status(400).json({
         success: false,
         message: "All fields are mandatory",
@@ -152,8 +166,7 @@ export const registerController = async (req, res) => {
       message: "User registered successfully",
       data: user,
     });
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
@@ -184,10 +197,14 @@ export const loginController = async (req, res) => {
     //3. check user registered or not
     //assume it's email first
     let userDetails;
-    userDetails = await User.findOne({ email: loginCred }).populate("additionalDetails");
+    userDetails = await User.findOne({ email: loginCred }).populate(
+      "additionalDetails"
+    );
     if (!userDetails) {
       //if not email then username
-      userDetails = await User.findOne({ username: loginCred }).populate("additionalDetails");
+      userDetails = await User.findOne({ username: loginCred }).populate(
+        "additionalDetails"
+      );
     }
     if (!userDetails) {
       return res.status(404).json({
@@ -196,7 +213,10 @@ export const loginController = async (req, res) => {
       });
     }
     //4. generate JWT tokens after password matching
-    const isPasswordValid = await bcrypt.compare(password, userDetails.password);
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      userDetails.password
+    );
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
@@ -221,7 +241,7 @@ export const loginController = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      expiresIn: new Date(Date.now() + 2 * 60 * 60 * 1000),//2 hours
+      expiresIn: new Date(Date.now() + 2 * 60 * 60 * 1000), //2 hours
     });
     return res.status(200).json({
       success: true,
@@ -230,23 +250,23 @@ export const loginController = async (req, res) => {
       data: userDetails,
     });
   } catch (error) {
-    console.log('Error in loginController: ', error);
+    console.log("Error in loginController: ", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
-      errorMessage: error.message
+      message: "Internal Server Error",
+      errorMessage: error.message,
     });
   }
-}
+};
 
 export const getAllUserDeatils = async (req, res) => {
   try {
     const userId = req.user.id;
     const userDetails = await User.findById(userId)
-      .populate('additionalDetails')
-      .populate('followers')
-      .populate('following')
-      .populate('blogs')
+      .populate("additionalDetails")
+      .populate("followers")
+      .populate("following")
+      .populate("blogs")
       .exec();
     return res.status(200).json({
       success: true,
@@ -254,14 +274,14 @@ export const getAllUserDeatils = async (req, res) => {
       data: userDetails,
     });
   } catch (error) {
-    console.log('Error in getAllUserDeatils: ', error);
+    console.log("Error in getAllUserDeatils: ", error);
     return res.status(500).json({
       success: false,
-      message: 'Internal Server Error',
-      errorMessage: error.message
+      message: "Internal Server Error",
+      errorMessage: error.message,
     });
   }
-}
+};
 
 //resetPassword
 export const resetPassword = async (req, res) => {
@@ -428,7 +448,10 @@ export const resetPasswordToken = async (req, res) => {
     }
     //generate token -> this token will be inserted in DB and then using this token
     //we will get the user and then reset the password
-    const token = await cryptoRandomStringAsync({ length: 20, type: 'url-safe' });
+    const token = await cryptoRandomStringAsync({
+      length: 20,
+      type: "url-safe",
+    });
     //converts hexadecimal to string
     //for example "36b8f84d-df4e-4d49-b662-bcde71a8764f"
     const updatedDetails = await User.findOneAndUpdate(
