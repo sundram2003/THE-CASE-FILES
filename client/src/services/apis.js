@@ -3,11 +3,13 @@ export const endpoints = {
   SENDOTP_API: BASE_URL + "/auth/sendOtp",
   SIGNUP_API: BASE_URL + "/auth/register",
   LOGIN_API: BASE_URL + "/auth/login",
+  RESETPASSWORD_API: BASE_URL + "/auth/reset-password",
+  RESETPASSTOKEN_API: BASE_URL + "/auth/reset-password-token",
 };
 
 export const settingsEndpoints = {
   CHANGE_PASSWORD_API: BASE_URL + "/auth/changePassword",
-  DELETE_PROFILE_API: BASE_URL + "/profile/deleteProfile",
+  DELETE_PROFILE_API: BASE_URL + "/auth/deleteAccount",
   GET_USER_DETAILS_API: BASE_URL + "/auth/getAllUserDetails",
   HANDLE_SEARCH_API: BASE_URL + "/profile/handleSearch",
   BLOCK_USER_API: BASE_URL + "/profile/blockUser",
@@ -36,4 +38,5 @@ export const blogEndpoints = {
   SEARCH_BLOG_API: BASE_URL + "/blog/getBlogsByTitle",
   ADD_MODERATOR_API: BASE_URL + "/auth/addModerator",
   REMOVE_MODERATOR_API: BASE_URL + "/auth/removeModerator",
+  DELETE_COMMENT_API: BASE_URL + "/blog/deleteComment",
 };

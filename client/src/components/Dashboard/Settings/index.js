@@ -1,5 +1,7 @@
 import React from "react";
 import EditProfile from "./EditProfile";
+import DeleteAccount from "./DeleteAccount";
+import UpdatePassword from "../UpdatePassword";
 // import DeleteAccount from "./DeleteAccount";
 // import UpdatePassword from "./UpdatePassword";
 const index = () => {
@@ -11,9 +13,9 @@ const index = () => {
       {/* Profile */}
       <EditProfile />
       {/* EditPassword */}
-      {/* <UpdatePassword /> */}
+      <UpdatePassword />
       {/* Delete Account */}
-      {/* <DeleteAccount /> */}
+      <DeleteAccount />
     </div>
   );
 };

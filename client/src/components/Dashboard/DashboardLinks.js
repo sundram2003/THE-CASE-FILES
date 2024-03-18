@@ -20,18 +20,18 @@ export const sidebarLinks = [
     path: "/blog/getMyBlogs",
     icon: "VscNote",
   },
-  {
-    id: 4,
-    name: "Earnings",
-    path: "/dashboard/earnings",
-    icon: "VscCreditCard",
-  },
+  // {
+  //   id: 4,
+  //   name: "Earnings",
+  //   path: "/dashboard/earnings",
+  //   icon: "VscCreditCard",
+  // },
 
-  {
-    id: 8,
-    name: "Admin Panel",
-    path: "/dashboard/admin",
-    icon: "VscShield",
-    type: ACCOUNT_TYPE.ADMIN,
-  },
+  // {
+  //   id: 8,
+  //   name: "Admin Panel",
+  //   path: "/dashboard/admin",
+  //   icon: "VscShield",
+  //   type: ACCOUNT_TYPE.ADMIN,
+  // },
 ];
