@@ -396,8 +396,9 @@ export const deleteBlog = async (req, res) => {
     */
     // 1. get blog id from request body
     const { blogId } = req.body;
+    const blogDetails = await Blog.findById(blogId);
     // 2. delete blogId from user's blogs
-    const userId = req.user.id;
+    const userId = blogDetails.createdBy;
     const user = await User.findByIdAndUpdate(userId, {
       $pull: { blogs: blogId },
       $inc: { contributions: -5 },
@@ -508,7 +509,6 @@ export const updateBlog = async (req, res) => {
     });
   }
 };
-
 export const getBlogsByUpvotes = async (req, res) => {
   try {
     /*
@@ -719,6 +719,50 @@ export const getCommentDetails = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: "Internal Server Error in fetching the comment",
+      errorMessage: error.message,
+    });
+  }
+}
+export const updateView = async (req, res) => {
+
+  try {
+    /*
+    1. get blog id from request params
+    2. get blog by id
+    3. update view
+    4. return response
+    */
+    // 1. get blog id from request params
+    const { blogId } = req.body;
+    // 2. get blog by id
+    const blog = await Blog.findById(blogId);
+    const userId = blog.createdBy;
+    if (!blog) {
+      return res.status(404).json({
+        success: false,
+        message: "Blog not found",
+      });
+    }
+    // 3. update view
+    const blogView = blog.views;
+    if (blogView == 99) {
+      const user = await User.findByIdAndUpdate(userId, {
+        $inc: { contributions: 100 },
+      });
+    }
+    blog.views = blogView + 1;
+    await blog.save();
+    // 4. return response
+    return res.status(200).json({
+      success: true,
+      message: "View updated successfully",
+      data: blog,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error in updating the view",
       errorMessage: error.message,
     });
   }

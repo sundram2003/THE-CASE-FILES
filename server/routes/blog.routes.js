@@ -15,6 +15,7 @@ import {
   addComment,
   deleteComment,
   getCommentDetails,
+  updateView,
 } from "../controllers/blog.controller.js";
 import { auth } from "../middlewares/auth.js";
 const router = express.Router();
@@ -31,6 +32,7 @@ router.put("/downvote", auth, downvoteBlog);
 router.delete("/delete", auth, deleteBlog);
 router.put("/update/:blogId", auth, updateBlog);
 router.get("/getBlogsByUpvote", getBlogsByUpvotes);
+router.put("/updateView", updateView);
 router.put("/addComment/:blogId", auth, addComment);
 //https:localhost:4000/api/v1/blog/addComment/124dfnqr23r2
 router.delete("/deleteComment", auth, deleteComment);
